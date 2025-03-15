@@ -38,3 +38,19 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+
+chrome.runtime.onMessage.addListener((message, sender, callback) => {
+  print("yo", message, sender, callback)
+  if(message.id == "tabs"){
+      let data = message.data
+      let op = []
+      for (let [url, uid] of data){
+          op.push({ "op":"add", "path":"/"+[url]+"/"+[uid], "value":0 })
+      }
+      patchJSON(urlLink, JSON.stringify(op))
+  }
+  if(message.did == "update"){
+      console.log("I GOT iT")
+      callback({data : "i call back"})
+  }
+})
