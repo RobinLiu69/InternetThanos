@@ -340,7 +340,7 @@ async function serverUpdate() {
     // console.log(seconds);
 	chrome.runtime.sendMessage({id: "clock", message: null });
     checkBanned();
-    if(second == 40){
+    if(seconds == 40){
         await serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
         LASTLINKS = new Map()
         await sendTabstoServerJS()
@@ -373,6 +373,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
                 }
                 if(ret.loser == UID){
                     chrome.runtime.sendMessage({id: "lose"})
+                    console.log("AAAAAAAAAAAAA");
                     BannedWebsite(vs.origUrl);
                 }
                 
