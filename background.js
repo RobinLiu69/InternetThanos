@@ -8,24 +8,6 @@ let UID = '';
 let LASTLINKS = new Map()
 let STARTCHECKINGMATCHES = 10
 
-
-
-chrome.runtime.onInstalled.addListener(() => {
-    const uidKey = "userUID";
-    
-    // 檢查 localStorage 是否已有 UID
-    chrome.storage.local.get([uidKey], (result) => {
-        if (!result[uidKey]) {
-            const newUID = crypto.randomUUID();  // 產生新的 UID
-            chrome.storage.local.set({ [uidKey]: newUID }, () => {
-            console.log("新 UID 已生成：", newUID);
-            });
-        } else {
-            console.log("已存在 UID：", result[uidKey]);
-        }
-    });
-});
-
 async function sendTabstoServerJS() {
     let links = new Promise((resolve, reject) => {
         chrome.tabs.query({}, (tabs) => {
@@ -78,19 +60,20 @@ chrome.runtime.onInstalled.addListener(async () => {
             console.log("已存在 UID：", result[uidKey]);
         }
     });
-});
-// Math.random() < 0.5 ? -1 : 1
-// {id : "tabs", data: }
-chrome.runtime.onInstalled.addListener(function() {
-	//startServer();
     console.log("擴展已安裝");
 	sendTabstoServerJS()
     chrome.alarms.create("updateClock", {
       periodInMinutes: 1/60 // Runs every 1 minute
     });
     chrome.alarms.create("updateGames", {
-        periodInMinutes: 1/60/20 // Runs every 0.05 sec
+        periodInMinutes: 1/60/20 // Runs every 1 sec
     });
+});
+// Math.random() < 0.5 ? -1 : 1
+// {id : "tabs", data: }
+chrome.runtime.onInstalled.addListener(function() {
+	//startServer();
+    
 });
 
 chrome.tabs.onCreated.addListener(() => {
@@ -176,7 +159,7 @@ async function clientCheckMatch(){
 //--------------------------------------------------------------------------------------------
 
 async function serverPatchJSON(link, payload) {
-    await fetch(link, {
+    await fetch(link + "?chach="+Date.now().toString(), {
         method: "PATCH",
         mode: "cors",
         headers: {
@@ -190,7 +173,7 @@ async function serverPatchJSON(link, payload) {
 }
 
 async function serverGetJSON(link) {
-    let responseJSON = await fetch(link, {
+    let responseJSON = await fetch(link + "?chach="+Date.now().toString(), {
         method: "GET",
         mode: "cors",
         headers: {
@@ -321,13 +304,16 @@ async function serverCheckMatches(){
 	//games = ["math.html", "typing.html", "cowboy.html", "maze.html"]
 	let games = ["/minigames/math/math.html"]
 	let tabs = await serverGetJSON(URLLINK)
+    console.log(tabs)
 	for (let [url, uids] of tabs) {
         if(!url.includes("youtube")){
             continue
         }
 		let uid2 = false
 		uids = new Map(Object.entries(uids))
+        console.log("the UIDS in MATCH STARTING : ", uids)
 		for (let [uid1, empty] of uids){
+            if(uid1 == "") continue
             if(!uid2){
 				uid2 = uid1
 			}
