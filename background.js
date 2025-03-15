@@ -214,12 +214,14 @@ async function serverCheckMatches(){
 	}
 }
 
-let timeClock = -1
+
 
 async function serverUpdate() {
-	timeClock += 1
-	chrome.runtime.sendMessage({id: "clock", message: timeClock });
-	if(timeClock % 60 == 0){
+    let now = new Date();
+    let seconds = now.getSeconds();
+    // console.log(seconds);
+	chrome.runtime.sendMessage({id: "clock", message: null });
+	if(seconds == 0){
 		//await serverUpdateIdle()
 		if(serverIsAdmin()){
 			await serverClearIdle()
