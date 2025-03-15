@@ -96,7 +96,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
         }
 	}
     if(alarm.name === "updateGames") {
-        console.log("WFOUA")
+        console.log("updateGames")
         chrome.runtime.sendMessage({ id: "updateGame" })
     }
 });
@@ -290,7 +290,7 @@ async function serverCheckMatches(){
 	//games = ["math.html", "typing.html", "cowboy.html", "maze.html"]
 	let games = ["/minigames/math/math.html"]
 	let tabs = await serverGetJSON(URLLINK)
-    console.log(tabs)
+    console.log("the tabs in serverCheckMatches : ", tabs)
 	for (let [url, uids] of tabs) {
         if(!url.includes("youtube")){
             continue
@@ -329,13 +329,14 @@ async function serverUpdate() {
     if(seconds == 30){
         await serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
     }
-    if(seconds % 10 == 0 && seconds / 10 > 3){
+    if(seconds % 5 == 0 && seconds > 30 && seconds <= 50 ){
         await sendTabstoServerJS()
     }
 	if(seconds == 0){
         STARTCHECKINGMATCHES = 0
 		await serverUpdateIdle()
 		if(serverIsAdmin()){
+            console.log("adminGOadminGOadminGOadminGOadminGOadminGOadminGOadminGO")
 			await serverPatchJSON(VSLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
 			await serverClearIdle()
 			serverCheckMatches()
@@ -370,10 +371,12 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
     }
     if(message.id == "danger"){
         console.log("\nOH NO IM IN DANGER\n")
-        await sendTabstoServerJS()
-        await serverPatchJSON(VSLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
-        await serverClearIdle()
-        serverCheckMatches()
+        if(serverIsAdmin()){
+            console.log("adminGOadminGOadminGOadminGOadminGOadminGOadminGOadminGO")
+			await serverPatchJSON(VSLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
+			await serverClearIdle()
+			serverCheckMatches()
+		}
         STARTCHECKINGMATCHES = 0
     }
 })
