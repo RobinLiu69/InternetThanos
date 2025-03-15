@@ -329,7 +329,7 @@ async function serverUpdate() {
     if(seconds == 30){
         await serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
     }
-    if(seconds % 10 > 3){
+    if(seconds % 10 == 0 && seconds / 10 > 3){
         await sendTabstoServerJS()
     }
 	if(seconds == 0){
