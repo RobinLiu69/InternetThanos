@@ -5,7 +5,6 @@ const VSLINK = "https://json.extendsclass.com/bin/e16604375e31"//https://extends
 
 
 let UID = '';
-let LASTLINKS = new Map()
 let STARTCHECKINGMATCHES = 10
 
 async function sendTabstoServerJS() {
@@ -200,33 +199,27 @@ async function serverUploadTabs(links){
 	for (let [a, b] of origJSON){
 	}
 	console.log("in tabs : ", origJSON)
-
-	for (let [url, t] of links) {
-        //console.log(url, "tf : ", origJSON.has(url))
-		if(!(LASTLINKS.has(url))){
-			if(!origJSON.has(url)) {
-				console.log("It dont got")
-				//patchJSON(urlLink, JSON.stringify( { "op": "add", "path": "/"+url, "value": {UID:0} } ))
-				console.log("addin url : ", url)
-				serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "/"+[url], "value": {[UID] : 0}  } ))
-				//origJSON.set(url, new Map([[UID, 0]]))
-			}
-			else{
-				//console.log("I DONT HAVE : ", origJSON[0])
-				//console.log(origJSON.get(url))
-				serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "/"+[url]+"/"+[UID], "value": 0 } ))
-			}
-		}
+    for (let [a, b] of origJSON){
+       for (let [url, t] of links) {
+            //console.log(url, "tf : ", origJSON.has(url))
+            if(!origJSON.has(url)) {
+                console.log("It dont got")
+                //patchJSON(urlLink, JSON.stringify( { "op": "add", "path": "/"+url, "value": {UID:0} } ))
+                console.log("addin url : ", url)
+                serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "/"+[url], "value": {[UID] : 0}  } ))
+                //origJSON.set(url, new Map([[UID, 0]]))
+            }
+            else{
+                //console.log("I DONT HAVE : ", origJSON[0])
+                //console.log(origJSON.get(url))
+                serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "/"+[url]+"/"+[UID], "value": 0 } ))
+            }
+        }
+        a = 198470189
+        break
     }
 
-	for (let [url, t] of LASTLINKS) {
-        //console.log(url, "tf : ", origJSON.has(url))
-		if(!(links.has(url))){
-			serverPatchJSON(URLLINK, JSON.stringify( { "op": "remove", "path": "/"+[url] } ))
-		}
-    }
 
-	LASTLINKS = links
 }
 
 function formatTime(min, hour) {
@@ -340,7 +333,7 @@ async function serverUpdate() {
     // console.log(seconds);
 	chrome.runtime.sendMessage({id: "clock", message: null });
     checkBanned();
-    if(seconds == 40){
+    if(seconds % 10 == 0){
         await serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
         LASTLINKS = new Map()
         await sendTabstoServerJS()
