@@ -248,6 +248,8 @@ async function BannedWebsite(link) {
     } else{ 
         bannedWebsites = JSON.parse(bannedWebsites);
     }   
+    console.log("\n\n\n BANNING LINK : ", link, "\n\n\n")
+    link = "https://" + link
     link = new URL(link).origin;
     bannedWebsites[link] = time;
     console.log(bannedWebsites);
@@ -363,7 +365,6 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
                 }
                 if(ret.loser == UID){
                     chrome.runtime.sendMessage({id: "lose"})
-                    console.log("AAAAAAAAAAAAA");
                     BannedWebsite(data.origUrl);
                 }
                 break
