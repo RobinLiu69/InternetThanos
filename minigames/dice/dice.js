@@ -70,7 +70,7 @@ async function sendToServer(message){
 
 async function whoWon(){
     // console.log("\nknow who won\n", message)
-    chrome.runtime.sendMessage({id: "whoWon", cache:CACHE, game:"maze"})
+    chrome.runtime.sendMessage({id: "whoWon", cache:CACHE, game:"dice"})
 }
 
 chrome.runtime.onMessage.addListener(async (message, sender, response) => {
@@ -86,7 +86,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
             whoWon()
         }
         if(counter >= 30 && !WINCHECK){
-            sendToServer({ "op":"add", "path":"/"+[CACHE]+"/"+[UID], "value":1000000 })
+            sendToServer({ "op":"add", "path":"/"+[CACHE]+"/"+[UID], "value":-100 })
             document.getElementById('message').innerText = `❌ 超時!`
             WINCHECK = true
         }
@@ -157,11 +157,11 @@ function countSameDice() {
 
 // 檢查遊戲是否結束
 function checkGameStatus() {
-    const lockedCount = lockedDice.filter(locked => locked).length;
     //---------------start
     if(WINCHECK){
         return;
     }
+    const lockedCount = lockedDice.filter(locked => locked).length;
     let finalScore = 0
     //---------------end
     // 修改檢查條件：如果所有骰子已鎖定，直接計算並顯示分數
@@ -186,7 +186,7 @@ function checkGameStatus() {
         document.getElementById('score-message').textContent = `最多幾個相同: ${diceSame}`;
         document.getElementById('final-score-message').textContent = `最終分數: ${finalScore}`;
     }
-    if(rollCount == 3 || LOCKIN){
+    if(rollCount == 3 || LOCKIN || lockedCount == 5){
         //-----------------------------------------start
         sendToServer({ "op":"add", "path":"/"+[CACHE]+"/"+[UID], "value":finalScore})
         WINCHECK = true
