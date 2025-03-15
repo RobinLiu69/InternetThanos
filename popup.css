@@ -68,13 +68,32 @@ li {
     white-space: nowrap;
     overflow: hidden;
     text-align: left;
+
+    display: flex;
+    justify-content: space-between;
 }
   
   /* 清單最後一項無底線 */
 li:last-child {
     border-bottom: none;
 }
-  
+.number {
+  font-weight: bold;
+  font-size: 14px;
+  color: #333;
+  width: 20px;
+  top: 50%;
+}
+.link {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;  
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+    width: 300px;
+    top: 50%;
+}
   /* 超連結樣式 */
 a {
     color: #007bff;
