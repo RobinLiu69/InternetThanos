@@ -39,11 +39,13 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
             WINCHECK = true
         }
     }
+    if(message.id == "uid"){
+        UID = message.uid
+    }
 })
 
 function getUIDAndMain() {
     const params = new URLSearchParams(window.location.search);
-    UID = params.get("uid");
     MAIN = params.get("isMain");
     CACHE = params.get("vslink");
 }

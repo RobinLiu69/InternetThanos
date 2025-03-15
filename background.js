@@ -2,8 +2,6 @@ const URLLINK = "https://json.extendsclass.com/bin/fe273cc038a4" //  https://ext
 const IDLELINK = "https://json.extendsclass.com/bin/688c7ed03e87" // https://extendsclass.com/jsonstorage/688c7ed03e87
 const VSLINK = "https://json.extendsclass.com/bin/ac25af8d762b"//    https://extendsclass.com/jsonstorage/ac25af8d762b
 
-
-
 let UID = '';
 let STARTCHECKINGMATCHES = 10
 
@@ -308,7 +306,7 @@ async function serverCheckMatches(){
 				let x = uid1+"-"+uid2+dateCache
 				let game = games[Math.floor(Math.random()*games.length)];
                 let isMain = UID == uid1
-				game = game + serverAddLinkData(game) + "&uid=" + UID + "&vslink=" + x + "&isMain="
+				game = game + serverAddLinkData(game) + "&vslink=" + x + "&isMain="
                 if(isMain) game = game+"true";
                 else game = game+"false";
 				console.log("\n\n, there is a match!!! : ", uid1, uid2)
@@ -324,9 +322,10 @@ async function serverUpdate() {
 	let now = new Date();
     let seconds = now.getSeconds();
     // console.log(seconds);
+    chrome.runtime.sendMessage({id: "uid", uid: UID });
 	chrome.runtime.sendMessage({id: "clock", message: null });
     checkBanned();
-    if(second == 50 && serverIsAdmin()){
+    if(seconds == 50 && serverIsAdmin()){
         await serverPatchJSON(VSLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
     }
     if(seconds == 30){
