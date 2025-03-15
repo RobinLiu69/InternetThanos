@@ -7,7 +7,7 @@
       "default_popup": "popup.html"
     },
     "background": {
-      "service_worker": "background.js"
+      "service_worker": ["background.js", "server.js"]
     },
     "permissions": ["activeTab", "alarms", "audio", "background", "tabs"]
   }

@@ -4,9 +4,11 @@ const vsLink = "https://json.extendsclass.com/bin/e16604375e31"//https://extends
 let UID = false
 
 async function getTabs() {
-  return new Promise((resolve, ))
+  return new Promise((resolve, reject) => {
+    
+  })
 }
-
+{id : "tabs", data: }
 chrome.runtime.onInstalled.addListener(function() {
     console.log("擴展已安裝");
   });
