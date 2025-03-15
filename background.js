@@ -2,9 +2,13 @@ const URLLINK = "https://json.extendsclass.com/bin/1684885865a7" // https://exte
 const IDLELINK = "https://json.extendsclass.com/bin/d9a563320dff" //https://extendsclass.com/jsonstorage/d9a563320dff
 const VSLINK = "https://json.extendsclass.com/bin/e16604375e31"//https://extendsclass.com/jsonstorage/e16604375e31
 
+
+
 let UID = '';
 let LASTLINKS = new Map()
 let STARTCHECKINGMATCHES = 10
+
+
 
 chrome.runtime.onInstalled.addListener(() => {
     const uidKey = "userUID";
@@ -84,6 +88,9 @@ chrome.runtime.onInstalled.addListener(function() {
     chrome.alarms.create("updateClock", {
       periodInMinutes: 1/60 // Runs every 1 minute
     });
+    setInterval(() => {
+        checkBanned();
+    }, 1000);
 });
 
 chrome.tabs.onCreated.addListener(() => {
@@ -107,6 +114,45 @@ chrome.alarms.onAlarm.addListener((alarm) => {
         }
 	}
 });
+
+// if 1 > 2 return true else false;
+function checkTime(time1, time2){
+    console.log(time1, time2);
+    let array1 = time1.split(":");
+    let array2 = time2.split(":");
+    if(array1[0] > array2[0] || array1[1] > array2[1] || array1[2] >= array2[2]) return true;
+    return false;
+}
+
+function checkBanned(){
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (tabs.length > 0) {
+            const tabUrl = tabs[0].url;
+            const originUrl = new URL(tabUrl).origin;  // 獲取主網址
+            // console.log("完整網址:", tabUrl);
+            // console.log("主網址:", originUrl);
+
+            chrome.storage.local.get(["bannedWebsites"], (result) => {
+                if (!result["bannedWebsites"]) {
+                    // console.log("nope")
+                    return;
+                } 
+                let bannedWebsites = new Set();
+                let websites = JSON.parse(result["bannedWebsites"]);
+                let currtime = formatTime(0, 0);
+                for (const [key, value] of Object.entries(websites)) {
+                    if(!checkTime(currtime, value)) bannedWebsites.add(key);
+                }
+                // console.log(websites);
+                // console.log(bannedWebsites);
+                if(bannedWebsites.has(originUrl) && tabUrl != "https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley"){
+                    chrome.tabs.update(tabs[0].id, { url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley" });
+                }
+            } )
+            
+        }
+    });
+}
 
 async function clientCheckMatch(){
     console.log("hi im checking")
@@ -195,6 +241,51 @@ async function serverUploadTabs(links){
 
 	LASTLINKS = links
 }
+
+function formatTime(min, hour) {
+    let now = new Date();
+    let date = now.getDate();
+    now.setMinutes(now.getMinutes() + min);
+    now.setHours(now.getHours() + hour);
+    let hours = now.getHours().toString().padStart(2, '0');  // 取得小時並補齊兩位
+    let minutes = now.getMinutes().toString().padStart(2, '0');  // 取得分鐘並補齊兩位
+    
+    return `${date}:${hours}:${minutes}`;  // 返回格式為 'HH:mm' 的字串
+}
+
+function getStorage(key){
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get([key], (result) => {
+            if (result[key]) {
+                resolve(result[key]);  // 如果找到資料，解析資料
+            } else {
+                resolve("Nothing");  // 如果沒找到資料，解析 "Nothing"
+            }
+        } )
+    })
+
+}
+
+async function serverGetBannedWebsite(link) {
+    let time = formatTime(0, 1);
+    // console.log(time);
+    let bannedWebsites = await getStorage("bannedWebsites");
+    
+    // console.log(bannedWebsites);
+    if (bannedWebsites == "Nothing") {
+        bannedWebsites = {};
+    } else{ 
+        bannedWebsites = JSON.parse(bannedWebsites);
+    }   
+    link = new URL(link).origin;
+    bannedWebsites[link] = time;
+    console.log(bannedWebsites);
+    chrome.storage.local.set({ "bannedWebsites": JSON.stringify(bannedWebsites) }, () => {
+        console.log("網站守門員設定完成");
+    });
+    
+}
+
 
 async function serverUpdateIdle(){
 	await serverPatchJSON(IDLELINK, JSON.stringify( { "op":"add", "path":"/"+[UID], "value":Date.now() } ))
