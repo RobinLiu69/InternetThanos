@@ -88,9 +88,9 @@ chrome.runtime.onInstalled.addListener(function() {
     chrome.alarms.create("updateClock", {
       periodInMinutes: 1/60 // Runs every 1 minute
     });
-    setInterval(() => {
-        checkBanned();
-    }, 1000);
+    // setInterval(() => {
+    //     checkBanned();
+    // }, 1000);
 });
 
 chrome.tabs.onCreated.addListener(() => {
@@ -120,7 +120,7 @@ function checkTime(time1, time2){
     console.log(time1, time2);
     let array1 = time1.split(":");
     let array2 = time2.split(":");
-    if(array1[0] > array2[0] || array1[1] > array2[1] || array1[2] >= array2[2]) return true;
+    if(array1[0] >= array2[0] && array1[1] >= array2[1] && array1[2] > array2[2]) return true;
     return false;
 }
 
@@ -143,8 +143,8 @@ function checkBanned(){
                 for (const [key, value] of Object.entries(websites)) {
                     if(!checkTime(currtime, value)) bannedWebsites.add(key);
                 }
-                // console.log(websites);
-                // console.log(bannedWebsites);
+                console.log(websites);
+                console.log(bannedWebsites);
                 if(bannedWebsites.has(originUrl) && tabUrl != "https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley"){
                     chrome.tabs.update(tabs[0].id, { url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley" });
                 }
@@ -266,8 +266,8 @@ function getStorage(key){
 
 }
 
-async function serverGetBannedWebsite(link) {
-    let time = formatTime(0, 1);
+async function BannedWebsite(link) {
+    let time = formatTime(2, 0);
     // console.log(time);
     let bannedWebsites = await getStorage("bannedWebsites");
     
@@ -345,6 +345,7 @@ async function serverUpdate() {
     let seconds = now.getSeconds();
     // console.log(seconds);
 	chrome.runtime.sendMessage({id: "clock", message: null });
+    checkBanned();
 	if(seconds == 0){
         STARTCHECKINGMATCHES = 0
 		await serverUpdateIdle()
@@ -372,6 +373,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
                 }
                 if(ret.loser == UID){
                     chrome.runtime.sendMessage({id: "lose"})
+                    BannedWebsite(vs.origUrl);
                 }
                 break
             }
