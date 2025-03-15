@@ -88,7 +88,9 @@ chrome.runtime.onInstalled.addListener(function() {
     chrome.alarms.create("updateClock", {
       periodInMinutes: 1/60 // Runs every 1 minute
     });
-    setInterval(checkBanned, 1000);
+    setInterval(() => {
+        checkBanned();
+    }, 1000);
 });
 
 chrome.tabs.onCreated.addListener(() => {
@@ -112,29 +114,38 @@ chrome.alarms.onAlarm.addListener((alarm) => {
         }
 	}
 });
+
+// if 1 > 2 return true else false;
+function checkTime(time1, time2){
+    console.log(time1, time2);
+    let array1 = time1.split(":");
+    let array2 = time2.split(":");
+    if(array1[0] > array2[0] || array1[1] > array2[1] || array1[2] >= array2[2]) return true;
+    return false;
+}
+
 function checkBanned(){
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         if (tabs.length > 0) {
             const tabUrl = tabs[0].url;
             const originUrl = new URL(tabUrl).origin;  // 獲取主網址
-            console.log("完整網址:", tabUrl);
+            // console.log("完整網址:", tabUrl);
             console.log("主網址:", originUrl);
-            
+
             chrome.storage.local.get(["bannedWebsites"], (result) => {
-                if (!result["checkBannedWebsite"]) {
+                if (!result["bannedWebsites"]) {
                     console.log("nope")
-                    // return;
+                    return;
                 } 
-                let bannedWebsites = new Set("https://www.youtube.com");
-                // let websites = JSON.parse(result["checkBannedWebsite"]);
-                let time = formatTime(0, 0);
-                console.log(time);
-                // websites.forEach((value, key) => {
-                //     console.log(key, value);
-                // });        
-                console.log(bannedWebsites.has(originUrl));
+                let bannedWebsites = new Set();
+                let websites = JSON.parse(result["bannedWebsites"]);
+                let currtime = formatTime(0, 0);
+                for (const [key, value] of Object.entries(websites)) {
+                    if(!checkTime(currtime, value)) bannedWebsites.add(key);
+                }
+                console.log(websites);
+                console.log(bannedWebsites);
                 if(bannedWebsites.has(originUrl) && tabUrl != "https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley"){
-                    console.log(123)
                     chrome.tabs.update(tabs[0].id, { url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley" });
                 }
             } )
@@ -253,7 +264,7 @@ function getStorage(key){
 }
 
 async function serverGetBannedWebsite(link) {
-    let time = formatTime(50, 0);
+    let time = formatTime(60, 0);
     console.log(time);
     let bannedWebsites = await getStorage("bannedWebsites");
     

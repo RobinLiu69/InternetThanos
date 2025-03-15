@@ -118,7 +118,7 @@ function getStorage(key){
 }
 
 async function serverGetBannedWebsite(link) {
-    let time = formatTime(50, 0);
+    let time = formatTime(60, 0);
     console.log(time);
     let bannedWebsites = await getStorage("bannedWebsites");
     
