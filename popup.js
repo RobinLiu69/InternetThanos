@@ -118,7 +118,7 @@ function getStorage(key){
 }
 
 async function serverGetBannedWebsite(link) {
-    let time = formatTime(60, 0);
+    let time = formatTime(0, 1);
     console.log(time);
     let bannedWebsites = await getStorage("bannedWebsites");
     
@@ -128,6 +128,7 @@ async function serverGetBannedWebsite(link) {
     } else{ 
         bannedWebsites = JSON.parse(bannedWebsites);
     }   
+    link = new URL(link).origin;
     bannedWebsites[link] = time;
     console.log(bannedWebsites);
     chrome.storage.local.set({ "bannedWebsites": JSON.stringify(bannedWebsites) }, () => {

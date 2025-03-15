@@ -130,11 +130,11 @@ function checkBanned(){
             const tabUrl = tabs[0].url;
             const originUrl = new URL(tabUrl).origin;  // 獲取主網址
             // console.log("完整網址:", tabUrl);
-            console.log("主網址:", originUrl);
+            // console.log("主網址:", originUrl);
 
             chrome.storage.local.get(["bannedWebsites"], (result) => {
                 if (!result["bannedWebsites"]) {
-                    console.log("nope")
+                    // console.log("nope")
                     return;
                 } 
                 let bannedWebsites = new Set();
@@ -143,8 +143,8 @@ function checkBanned(){
                 for (const [key, value] of Object.entries(websites)) {
                     if(!checkTime(currtime, value)) bannedWebsites.add(key);
                 }
-                console.log(websites);
-                console.log(bannedWebsites);
+                // console.log(websites);
+                // console.log(bannedWebsites);
                 if(bannedWebsites.has(originUrl) && tabUrl != "https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley"){
                     chrome.tabs.update(tabs[0].id, { url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley" });
                 }
@@ -264,16 +264,17 @@ function getStorage(key){
 }
 
 async function serverGetBannedWebsite(link) {
-    let time = formatTime(60, 0);
-    console.log(time);
+    let time = formatTime(0, 1);
+    // console.log(time);
     let bannedWebsites = await getStorage("bannedWebsites");
     
-    console.log(bannedWebsites);
+    // console.log(bannedWebsites);
     if (bannedWebsites == "Nothing") {
         bannedWebsites = {};
     } else{ 
         bannedWebsites = JSON.parse(bannedWebsites);
     }   
+    link = new URL(link).origin;
     bannedWebsites[link] = time;
     console.log(bannedWebsites);
     chrome.storage.local.set({ "bannedWebsites": JSON.stringify(bannedWebsites) }, () => {
