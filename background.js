@@ -333,9 +333,8 @@ async function serverUpdate() {
     // console.log(seconds);
 	chrome.runtime.sendMessage({id: "clock", message: null });
     checkBanned();
-    if(seconds % 10 == 0){
+    if(seconds % 10 > 3){
         await serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
-        LASTLINKS = new Map()
         await sendTabstoServerJS()
     }
 	if(seconds == 0){
@@ -362,6 +361,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
         for (let [vslink, data] of vs){
             if(vslink == message.cache){
                 let ret = seeWhoWon(message.game, data)
+                console.log("\n\n ret : ", ret, "\n\n")
                 if(ret.winner == UID){
                     chrome.runtime.sendMessage({id: "win" });
                 }
@@ -369,7 +369,6 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
                     chrome.runtime.sendMessage({id: "lose"})
                     BannedWebsite(vs.origUrl);
                 }
-                
                 break
             }
         }
@@ -377,7 +376,6 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
     if(message.id == "danger"){
         console.log("\nOH NO IM IN DANGER\n")
         await serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
-        LASTLINKS = new Map()
         await sendTabstoServerJS()
         await serverPatchJSON(VSLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
         await serverClearIdle()
