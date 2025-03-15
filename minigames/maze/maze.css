@@ -1,27 +1,18 @@
 body {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f0f0f0;
-  }
-  
-  #maze-container {
-    position: relative;
-    width: 400px;
-    height: 400px;
-    background-color: #fff;
-    border: 2px solid #000;
-    overflow: hidden;
-  }
-  
-  #player {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background-color: red;
-    border-radius: 50%;
-  }
-  
+  background-color: #121212; /* 深色背景 */
+  color: #f0f0f0; /* 文字亮色 */
+  text-align: center;
+}
+canvas {
+  border: 2px solid #444;
+}
+#status {
+  font-size: 18px;
+  margin-top: 10px;
+  color: #e0e0e0;
+}
+#timer {
+  font-size: 18px;
+  margin-top: 10px;
+  color: #e0e0e0;
+}

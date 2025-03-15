@@ -149,11 +149,11 @@ async function serverUpdateIdle(){
 async function serverClearIdle(){
 	data = await serverGetJSON(URLLINK)
 	for (let [uid, tm] of data){
-		if(Date.now() - tm > 30*1000)
+		if(Date.now() - tm > 30*1000){}
 	}
 }
 
-import { serverAddLinkData } from "./tools.js"
+// import { serverAddLinkData } from "./tools.js"
 
 async function serverCheckMatches(){
 	//games = ["math.html", "typing.html", "cowboy.html", "maze.html"]
@@ -180,7 +180,8 @@ let timeClock = -1
 
 async function serverUpdate() {
 	timeClock += 1
-	
+	chrome.runtime.sendMessage({id: "clock", message: timeClock });
+    console.log(timeClock);
 	if(timeClock % 60 == 0){
 		//await serverUpdateIdle()
 		if(ISADMIN){

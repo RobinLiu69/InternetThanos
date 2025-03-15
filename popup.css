@@ -1,25 +1,65 @@
 /* 基本設定 */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', sans-serif;
     margin: 15px;
     padding: 0;
-    background: #f0f0f0;
+    background: url("InfinityGlove.jpg") no-repeat center center fixed;
+    background-size: cover;
     color: #333;
     width: 300px;
     text-align: center;
 }
-  
-  /* 標題樣式 */
-h1 {
-    color: #007bff;
-    font-size: 22px;
-    margin-bottom: 10px;
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(63, 63, 63, 0.7); /* 調整透明度 (0 = 全透明, 1 = 不透明) */
+    z-index: -1;
 }
-  
+/* 標題樣式 */
+h1 {
+    color: #0ff;
+    text-shadow: 0 0 10px #0ff;
+    animation: colorChange 10s infinite;
+}
+@keyframes colorChange {
+    0% {
+        color: #0ff; /* Cyan (default color) */
+        text-shadow: 0 0 10px #0ff;
+    }
+    14% {
+        color: #ff0000; /* Ruby Red */
+        text-shadow: 0 0 10px #ff0000;
+    }
+    28% {
+        color: #ffcc00; /* Amber */
+        text-shadow: 0 0 10px #ffcc00;
+    }
+    42% {
+        color: #800080; /* Amethyst Purple */
+        text-shadow: 0 0 10px #800080;
+    }
+    56% {
+        color: #0000ff; /* Sapphire Blue */
+        text-shadow: 0 0 10px #0000ff;
+    }
+    70% {
+        color: #ff1493; /* Tourmaline Pink */
+        text-shadow: 0 0 10px #ff1493;
+    }
+    85% {
+        color: #00ff00; /* Emerald Green */
+        text-shadow: 0 0 10px #00ff00;
+    }
+}
 h2 {
     font-size: 18px;
     margin: 15px 0 10px;
-    color: #555;
+    color: #d4d4d4;
+    text-shadow: 0 0 10px #d4d4d4;
 }
   
   /* 輸入框和按鈕樣式 */
@@ -95,7 +135,41 @@ li:last-child {
     top: 50%;
 }
 
-  
+#tabList li:hover {
+    background: rgba(100, 100, 100, 0.2);
+}
+
+.clock-container {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: conic-gradient(
+        rgb(108, 8, 95) var(--progress, 100%), 
+        #121212 var(--progress, 100%) 100%
+    );
+    box-shadow: 0 0 15px rgba(108, 8, 95, 0.8);
+    color: rgb(255, 255, 255);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Courier New', monospace;
+    font-size: 24px;
+    border: 2px solid rgb(108, 8, 95);
+    margin: 20px auto;
+    transition: all 0.2s ease;
+}
+
+/* hover 時微微放大 */
+.clock-container:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 50px rgba(108, 8, 95, 1);
+}
+
+#clock {
+    text-shadow: 0 0 8px #fff;
+    font-weight: bold;
+}
+
 /* 超連結樣式 */
 a {
     color: #007bff;
