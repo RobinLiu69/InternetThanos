@@ -6,10 +6,16 @@
     "action": {
       "default_popup": "popup.html"
     },
+    
     "background": {
       "service_worker": "background.js",
       "type": "module"
     },
-    "permissions": ["activeTab", "alarms", "background", "tabs", "storage"]
+    "permissions": ["activeTab", "alarms", "background", "tabs", "storage"],
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"]
+      }
+    ]
   }
   

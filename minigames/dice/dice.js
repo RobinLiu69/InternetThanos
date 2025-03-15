@@ -55,6 +55,57 @@ const diceCategories = [
     ["12345", "12346", "12356", "12456", "13456", "23456"]
 ];
 
+//-----------------------------------------start
+let UID = false
+let MAIN = false
+let CACHE = false
+let WINCHECK = false
+let counter = 0
+let LOCKIN = false
+
+async function sendToServer(message){
+    // console.log("\nI sent to server !\n", message)
+	chrome.runtime.sendMessage({id: "patch",op: message });
+}
+
+async function whoWon(){
+    // console.log("\nknow who won\n", message)
+    chrome.runtime.sendMessage({id: "whoWon", cache:CACHE, game:"maze"})
+}
+
+chrome.runtime.onMessage.addListener(async (message, sender, response) => {
+    if(message.id == "win"){
+        document.getElementById('message').textContent = `✅ 真幸運！你拿了 ${finalScore} 分\nYOU WIN!!!`;
+    }
+    if(message.id == "lose"){
+        document.getElementById('message').textContent = `you don't have good luck:(, 你將被鎖5分鐘`;
+    }
+    if(message.id == "updateGame"){
+        counter += 1;
+        if(WINCHECK && Math.floor(counter) == counter && counter < 30 && counter % 3 == 0){
+            whoWon()
+        }
+        if(counter >= 30 && !WINCHECK){
+            sendToServer({ "op":"add", "path":"/"+[CACHE]+"/"+[UID], "value":1000000 })
+            document.getElementById('message').innerText = `❌ 超時!`
+            WINCHECK = true
+        }
+    }
+    if(message.id == "uid"){
+        UID = message.uid
+        // console.log("\n\nI GOT THE id ; \n\n", UID)
+    }
+})
+
+function getUIDAndMain() {
+    const params = new URLSearchParams(window.location.search);
+    MAIN = params.get("isMain");
+    CACHE = params.get("vslink");
+}
+//-----------------------------------------end
+
+
+
 const scores = [];
 for (let i = 0; i < diceCategories.length; i++) {
     for (let j = 0; j < diceCategories[i].length; j++) {
@@ -107,7 +158,12 @@ function countSameDice() {
 // 檢查遊戲是否結束
 function checkGameStatus() {
     const lockedCount = lockedDice.filter(locked => locked).length;
-
+    //---------------start
+    if(WINCHECK){
+        return;
+    }
+    let finalScore = 0
+    //---------------end
     // 修改檢查條件：如果所有骰子已鎖定，直接計算並顯示分數
     if (lockedCount === 5) {
         document.getElementById('roll-button').disabled = true;
@@ -115,7 +171,7 @@ function checkGameStatus() {
 
         const diceString = getDiceString();  // 取得鎖定的骰子組合
         console.log(diceString);
-        const finalScore = calculateScore(diceString); // 計算分數
+        finalScore = calculateScore(diceString); // 計算分數
         const diceSame = countSameDice(diceString);
         document.getElementById('score-message').textContent = `最多幾個相同: ${diceSame}`;
         document.getElementById('final-score-message').textContent = `最終分數: ${finalScore}`;
@@ -125,11 +181,18 @@ function checkGameStatus() {
 
         const diceString = getDiceString();  // 取得最後的骰子組合
         console.log(diceString);
-        const finalScore = calculateScore(diceString); // 計算分數
+        finalScore = calculateScore(diceString); // 計算分數
         const diceSame = countSameDice(diceString);
         document.getElementById('score-message').textContent = `最多幾個相同: ${diceSame}`;
         document.getElementById('final-score-message').textContent = `最終分數: ${finalScore}`;
     }
+    if(rollCount == 3 || LOCKIN){
+        //-----------------------------------------start
+        sendToServer({ "op":"add", "path":"/"+[CACHE]+"/"+[UID], "value":finalScore})
+        WINCHECK = true
+        //-----------------------------------------end
+    }
+   
 }
 
 
@@ -154,7 +217,7 @@ document.getElementById('roll-button').addEventListener('click', () => {
 for (let i = 0; i < dice.length; i++) {
     document.getElementById(`dice${i + 1}`).addEventListener('click', () => lockDice(i));
 }
-
+document.getElementById(confirm).addEventListener('click', () => LOCKIN = true);
 updateDice(1);  // 初始化骰子顯示
 
 // 確保所有 HTML 元素載入後執行
