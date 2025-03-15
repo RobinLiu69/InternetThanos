@@ -17,7 +17,7 @@ async function sendToServer(message){
 }
 
 async function whoWon(){
-    console.log("\nknow who won\n", message)
+    console.log("\nknow who won\n")
     chrome.runtime.sendMessage({id: "whoWon", cache:CACHE, game:"math"})
 }
 

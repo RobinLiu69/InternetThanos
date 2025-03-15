@@ -6,7 +6,7 @@ let startButton = document.querySelector('button');
 
 let startTime, timerInterval;
 let sentence = '';
-let isTesting = false;
+let starting = true;
 
 //----------------------------
 let counter = 0
@@ -21,25 +21,28 @@ async function sendToServer(message){
 }
 
 async function whoWon(){
-    console.log("\nknow who won\n", message)
+    console.log("\nknow who won\n")
     chrome.runtime.sendMessage({id: "whoWon", cache:CACHE, game:"type"})
 }
 
 chrome.runtime.onMessage.addListener(async (message, sender, response) => {
     if(message.id == "win"){
-        resultElement.innerText = `✅ 正確！你完成了這段文字。\n打字速度: ${wpm} 字/分鐘`;
+        resultElement.innerText = `✅ 正確！你完成了這段文字。\n打字速度: ${wpm} 字/分鐘\nYOU WIN!!!`;
     }
     if(message.id == "lose"){
-        document.getElementById('message').innerText = `you lose :(, 你將被鎖5分鐘`;
+        resultElement.innerText = `❌ \n打字速度: ${wpm} 字/分鐘\nyou lose, 你將被鎖5分鐘`;
     }
     if(message.id == "updateGame"){
+        setInterval(function () {checkTyping();if(starting) return}, 100);
+        if(starting) startTest()
+        console.log("updatedEEEEEEEEEEEEEEEEEEEEEEEEEE")
         updateTimer()
         counter += 1;
         if(WINCHECK && Math.floor(counter) == counter && counter < 30 && counter % 3 == 0){
             whoWon()
         }
-        button.innerText = counter.toFixed(2);
-        if(counter >= 30 && !WINCHECK){
+        //button.innerText = counter.toFixed(2);
+        if(counter >= 20 && !WINCHECK){
             sendToServer({ "op":"add", "path":"/"+[CACHE]+"/"+[UID], "value":1000000 })
             document.getElementById('message').innerText = `❌ 超時!`
             WINCHECK = true
@@ -83,8 +86,7 @@ function startTest() {
     resultElement.innerText = '';
     
     // 設定測試開始
-    isTesting = true;
-    startButton.disabled = true;
+    starting = false;
     userInputElement.disabled = false;
     userInputElement.focus();
 
@@ -106,20 +108,16 @@ function checkTyping() {
         return
     }
     //---------------end
-
-    if (!isTesting) return;
+    if (starting) return;
     
     let userInput = userInputElement.value;
-    
+    console.log("\n\nINPUTS", userInput,"\n" ,sentence)
     // 如果用戶輸入正確，停止測試
     if (userInput == sentence) {
-        alert("woawhoiwh")
         clearInterval(timerInterval);
         let elapsedTime = ((Date.now() - startTime)/1000).toFixed(4);
         let wpm = calculateWPM(elapsedTime, sentence);
         resultElement.innerText = `✅ 正確！你完成了這段文字。\n打字速度: ${wpm} 字/分鐘`;
-        isTesting = false;
-        startButton.disabled = false;
 
         //-----------------------------------------start
         sendToServer({ "op":"add", "path":"/"+[CACHE]+"/"+[UID], "value":((Date.now() - startTime)/1000).toFixed(2) })
@@ -135,4 +133,4 @@ function calculateWPM(timeInSeconds, text) {
     return Math.round(words / minutes);
 }
 
-startTest()
+document.getElementById("userInput").addEventListener("input", checkAnswer);
