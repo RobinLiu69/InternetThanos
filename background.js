@@ -109,7 +109,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 });
 
 async function clientCheckMatch(){
-    vs = await serverGetJSON(VSLINK)
+    let vs = await serverGetJSON(VSLINK)
     for(let [uids, data] of vs){
         if(uids.includes(UID)){
             chrome.tabs.create({url: data.get("game")})
