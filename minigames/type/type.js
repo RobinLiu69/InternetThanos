@@ -7,7 +7,7 @@ let startButton = document.querySelector('button');
 let startTime, timerInterval;
 let sentence = '';
 let starting = true;
-let wpm = 0;
+let wpm;
 //----------------------------
 let counter = 0
 let UID = false
@@ -116,7 +116,7 @@ function checkTyping() {
     if (userInput == sentence) {
         clearInterval(timerInterval);
         let elapsedTime = ((Date.now() - startTime)/1000).toFixed(4);
-        let wpm = calculateWPM(elapsedTime, sentence);
+        wpm = calculateWPM(elapsedTime, sentence);
         resultElement.innerText = `✅ 正確！你完成了這段文字。\n打字速度: ${wpm} 字/分鐘`;
 
         //-----------------------------------------start
