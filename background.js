@@ -25,6 +25,7 @@ async function getTabs() {
 }
 // {id : "tabs", data: }
 chrome.runtime.onInstalled.addListener(function() {
+	startServer();
     console.log("擴展已安裝");
     chrome.alarms.create("updateClock", {
       periodInMinutes: 1 // Runs every 1 minute

@@ -7,6 +7,10 @@ chrome.runtime.onInstalled.addListener(function() {
     console.log("擴展已安裝");
   });
 
+export function startServer() {
+    console.log("Server started from server.js");
+}
+
 async function patchJSON(link, op){
     fetch(link, {
         method : "PATCH",
