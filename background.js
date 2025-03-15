@@ -3,6 +3,7 @@ const IDLELINK = "https://json.extendsclass.com/bin/d9a563320dff" //https://exte
 const VSLINK = "https://json.extendsclass.com/bin/e16604375e31"//https://extendsclass.com/jsonstorage/e16604375e31
 
 let UID = '';
+let LASTLINKS = new Map()
 
 chrome.runtime.onInstalled.addListener(() => {
     const uidKey = "userUID";
@@ -19,10 +20,11 @@ chrome.runtime.onInstalled.addListener(() => {
         }
     });
 });
+
 async function sendTabstoServerJS() {
     let links = new Promise((resolve, reject) => {
         chrome.tabs.query({}, (tabs) => {
-            let ret = []
+            let ret = new Map()
             for (let i=0; i<tabs.length; i++) {
                 let url = tabs[i].url
                 if(url.substring(0, 8) == "https://"){
@@ -33,7 +35,7 @@ async function sendTabstoServerJS() {
                             break
                         }
                     }
-                    ret.push((' ' + url.substring(8, stopIndex)).slice(1))
+                    ret.set((' ' + url.substring(8, stopIndex)).slice(1), 0)
                 }
             }
             if(ret) {
@@ -75,7 +77,6 @@ chrome.runtime.onInstalled.addListener(async () => {
 
 // {id : "tabs", data: }
 chrome.runtime.onInstalled.addListener(function() {
-	//serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
 	//startServer();
     console.log("擴展已安裝");
 	sendTabstoServerJS()
@@ -133,11 +134,9 @@ async function serverGetJSON(link) {
     let iddwadwak = await responseJSON.json()
     iddwadwak = new Map(Object.entries(iddwadwak))
 	for (let [a, b] of iddwadwak){
-		
 	}
     return iddwadwak
 }
-
 
 async function serverUploadTabs(links){
 	let origJSON = await serverGetJSON(URLLINK)
@@ -148,23 +147,36 @@ async function serverUploadTabs(links){
 	//	console.log("adding : ", url)
 	//	serverPatchJSON(URLLINK, JSON.stringify({ "op":"add", "path":"/"+[url], "value":0 }))
 	//}
-	
+	for (let [a, b] of origJSON){
+	}
+	console.log("in tabs : ", origJSON)
 
-	for (let url of links) {
+	for (let [url, t] of links) {
         //console.log(url, "tf : ", origJSON.has(url))
-        if(!origJSON.has(url)) {
-			console.log("It dont got")
-            //patchJSON(urlLink, JSON.stringify( { "op": "add", "path": "/"+url, "value": {UID:0} } ))
-            console.log("addin url : ", url)
-            //serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "/"+[url], "value": {[UID] : 0}  } ))
-            //origJSON.set(url, new Map([[UID, 0]]))
-        }
-        else if(!(origJSON.get("url"))){
-			console.log("I DONT HAVE : ", origJSON.get("url"))
-            //console.log(origJSON.get(url))
-            //serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "/"+[url]+"/"+[UID], "value": 0 } ))
-        }
+		if(!(LASTLINKS.has(url))){
+			if(!origJSON.has(url)) {
+				console.log("It dont got")
+				//patchJSON(urlLink, JSON.stringify( { "op": "add", "path": "/"+url, "value": {UID:0} } ))
+				console.log("addin url : ", url)
+				serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "/"+[url], "value": {[UID] : 0}  } ))
+				//origJSON.set(url, new Map([[UID, 0]]))
+			}
+			else{
+				//console.log("I DONT HAVE : ", origJSON[0])
+				//console.log(origJSON.get(url))
+				serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "/"+[url]+"/"+[UID], "value": 0 } ))
+			}
+		}
     }
+
+	for (let [url, t] of LASTLINKS) {
+        //console.log(url, "tf : ", origJSON.has(url))
+		if(!(links.has(url))){
+			serverPatchJSON(URLLINK, JSON.stringify( { "op": "remove", "path": "/"+[url] } ))
+		}
+    }
+
+	LASTLINKS = links
 }
 
 async function serverUpdateIdle(){
@@ -193,6 +205,7 @@ function serverIsAdmin(){
 }
 
 async function serverCheckMatches(){
+	console.log("\n\n\n\n\nMATCH IS GOING \n\n\n\n\n")
 	//games = ["math.html", "typing.html", "cowboy.html", "maze.html"]
 	let games = ["math.html", "typing.html"]
 	let tabs = await serverGetJSON(URLLINK)
@@ -207,22 +220,24 @@ async function serverCheckMatches(){
 				let x = uid1+"-"+uid2
 				let game = games[Math.floor(Math.random()*games.length)];
 				game = game + serverAddLinkData(game)
-				serverPatchJSON(VSLINK, {x: {"game" : game, uid1 : "", uid2 : "", "win" : ""} })
+				console.log("\n\n, there is a match!!! : ", uid1, uid2)
+				serverPatchJSON(VSLINK, JSON.stringify({"op": "add", "path": "/"+[x], "value": {"game" : [game], [uid1] : "", [uid2] : "", "win" : ""} }))
 				uid2 = false
 			}
 		}
 	}
 }
 
-let timeClock = -1
 
 async function serverUpdate() {
-	timeClock += 1
-	chrome.runtime.sendMessage({id: "clock", message: timeClock });
-    console.log(timeClock);
-	if(timeClock % 60 == 0){
-		//await serverUpdateIdle()
+	let now = new Date();
+    let seconds = now.getSeconds();
+    // console.log(seconds);
+	chrome.runtime.sendMessage({id: "clock", message: null });
+	if(seconds == 0){
+		await serverUpdateIdle()
 		if(serverIsAdmin()){
+			serverPatchJSON(VSLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
 			await serverClearIdle()
 			serverCheckMatches()
 		}
