@@ -340,7 +340,7 @@ async function serverUpdate() {
     // console.log(seconds);
 	chrome.runtime.sendMessage({id: "clock", message: null });
     checkBanned();
-    if(second == 40){
+    if(seconds == 40){
         await serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
         LASTLINKS = new Map()
         await sendTabstoServerJS()
@@ -364,6 +364,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
         serverPatchJSON(VSLINK, JSON.stringify(message.op))
     }
     if(message.id == "whoWon"){
+        console.log("\nIm seeing who won\n")
         let vs = await serverGetJSON(VSLINK)
         for (let [vslink, data] of vs){
             if(vslink == message.cache){
