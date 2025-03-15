@@ -1,5 +1,5 @@
 const urlLink = "https://json.extendsclass.com/bin/1684885865a7" // https://extendsclass.com/jsonstorage/1684885865a7
-const syncLink = "https://json.extendsclass.com/bin/d9a563320dff" //https://extendsclass.com/jsonstorage/d9a563320dff
+const idleLink = "https://json.extendsclass.com/bin/d9a563320dff" //https://extendsclass.com/jsonstorage/d9a563320dff
 const vsLink = "https://json.extendsclass.com/bin/e16604375e31"//https://extendsclass.com/jsonstorage/e16604375e31
 let UID = false
 
@@ -35,6 +35,23 @@ async function sendTabstoServerJS() {
 	})
 }
 
+// Generate UID
+chrome.runtime.onInstalled.addListener(() => {
+    const uidKey = "userUID";
+    
+    // 檢查 localStorage 是否已有 UID
+    chrome.storage.local.get([uidKey], (result) => {
+        if (!result[uidKey]) {
+            const newUID = crypto.randomUUID();  // 產生新的 UID
+            chrome.storage.local.set({ [uidKey]: newUID }, () => {
+            console.log("新 UID 已生成：", newUID);
+            });
+        } else {
+            console.log("已存在 UID：", result[uidKey]);
+        }
+    });
+});
+
 // {id : "tabs", data: }
 chrome.runtime.onInstalled.addListener(function() {
 	//startServer();
@@ -44,10 +61,13 @@ chrome.runtime.onInstalled.addListener(function() {
     });
 });
 
+chrome.runtime.onUpdate.addListener(() => {
+	sendTabstoServerJS()
+})
+
 chrome.alarms.onAlarm.addListener((alarm) => {
 	if (alarm.name === "updateClock") {
-		console.log("sending")
-		chrome.runtime.sendMessage( {did: "update", data: null} )
+		serverUpdate()
 	}
 });
 
@@ -79,21 +99,24 @@ async function getJSON(link){
 }
 
 function serverUploadTabs(links){
+	let op = []
+	for (let [url, uid] of links){
+		op.push({ "op":"add", "path":"/"+[url]+"/"+[uid], "value":0 })
+	}
+	patchJSON(urlLink, JSON.stringify(op))
+}
+
+function updateIdle
+
+function serverCheckMatches(){
 
 }
 
-chrome.runtime.onMessage.addListener((message, sender, callback) => {
-    print("yo", message, sender, callback)
-    if(message.id == "tabs"){
-        let data = message.data
-        let op = []
-        for (let [url, uid] of data){
-            op.push({ "op":"add", "path":"/"+[url]+"/"+[uid], "value":0 })
-        }
-        patchJSON(urlLink, JSON.stringify(op))
-    }
-    if(message.did == "update"){
-        console.log("I GOT iT")
-        callback({data : "i call back"})
-    }
-})
+let timeClock = -1
+
+function serverUpdate() {
+	timeClock += 1
+	if(timeClock % 60 == 0){
+		serverCheckMatches()
+	}
+}
