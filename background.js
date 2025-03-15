@@ -133,31 +133,16 @@ async function serverUpdateIdle(){
 
 async function serverClearIdle(){
 	data = await serverGetJSON(URLLINK)
-}
-
-function generateNumbers() {
-    num1 = Math.floor(Math.random() * 100) + 1;
-    num2 = Math.floor(Math.random() * 100) + 1;
-
-    const operators = ['+', '-', '*', '/'];
-    operator = operators[Math.floor(Math.random() * operators.length)];
-
-    // 確保不會產生負數或小數
-    if (operator === '-') {
-        if (num1 < num2) [num1, num2] = [num2, num1];
-    }
-    if (operator === '/') {
-        while (num1 % num2 !== 0) {
-            num1 = Math.floor(Math.random() * 100) + 1;
-            num2 = Math.floor(Math.random() * 100) + 1;
-        }
-    }
+	for (let [uid, tm] of data){
+		if(Date.now() - tm > 30*1000)
+	}
 }
 
 import { serverAddLinkData } from "./tools.js"
 
 async function serverCheckMatches(){
-	games = ["math.html", "typing.html", "cowboy.html", "maze.html"]
+	//games = ["math.html", "typing.html", "cowboy.html", "maze.html"]
+	games = ["math.html", "typing.html"]
 	tabs = await serverGetJSON(URLLINK)
 	for (let [url, uids] of tabs) {
 		let uid2 = false

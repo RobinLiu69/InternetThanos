@@ -1,0 +1,71 @@
+body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #000000;  /* 預設背景黑色 */
+    color: white;  /* 預設文字顏色白色 */
+    font-size: 2em;  /* 字體放大 */
+    text-align: center;  /* 讓所有文字都置中 */
+}
+
+.card {
+    background-color: #000000;  /* 卡片背景設為白色 */
+    color: rgb(255, 255, 255);  /* 卡片文字顏色設為黑色 */
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 80%;
+    max-width: 1000px;
+}
+
+button {
+    margin-top: 30px;
+    padding: 20px 40px;
+    background-color: #ffffff;  /* 按鈕背景設為白色 */
+    color: rgb(0, 0, 0);  /* 按鈕文字設為黑色 */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.5em;  /* 按鈕字體放大 */
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #d2cbcb;  /* 當按鈕懸停時背景顏色改變 */
+    transform: scale(1.05);
+}
+
+textarea {
+    width: 100%;
+    height: 150px;
+    margin-top: 30px;
+    padding: 20px;
+    font-size: 1.5em;  /* 字體放大 */
+    border-radius: 8px;
+    border: 2px solid #444444;
+    background-color: #ffffff;  /* 輸入區背景設為白色 */
+    color: rgb(0, 0, 0);  /* 輸入區字體顏色設為黑色 */
+    box-sizing: border-box;
+}
+
+p.sentence {
+    font-size: 3em;  /* 顯示題目的字體放大 */
+    color: rgb(255, 255, 255);  /* 顯示題目的字體顏色設為白色 */
+    margin-bottom: 30px;  /* 顯示題目與其他內容之間的間距 */
+}
+
+#timer {
+    font-size: 2em;
+    margin-top: 20px;
+}
+
+#result {
+    font-size: 2em;
+    margin-top: 20px;
+    font-weight: bold;
+    color: rgb(255, 255, 255);  /* 結果文字顏色設為白色 */
+}
