@@ -3,6 +3,7 @@ let counter = 0;
 let interval;
 let correctAnswer = null;
 let wrongAttempts = 0;
+let startTime = Date.now();
 
 //-----------------------------------------start
 let UID = false
@@ -22,7 +23,7 @@ async function whoWon(){
 
 chrome.runtime.onMessage.addListener(async (message, sender, response) => {
     if(message.id == "win"){
-        document.getElementById('message').innerText = `✅ 正確答案！你花了 ${counter.toFixed(2)} 秒\nYOU WIN!!!`;
+        document.getElementById('message').innerText = `✅ 正確答案！你花了 ${((Date.now() - startTime)/1000).toFixed(2)} 秒\nYOU WIN!!!`;
     }
     if(message.id == "lose"){
         document.getElementById('message').innerText = `you lose :(, 你將被鎖5分鐘`;
@@ -32,10 +33,10 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
         if(WINCHECK && Math.floor(counter) == counter && counter < 30 && counter % 3 == 0){
             whoWon()
         }
-        button.innerText = counter.toFixed(2);
+        button.innerText = ((Date.now() - startTime)/1000).toFixed(2);
         if(counter >= 30 && !WINCHECK){
             sendToServer({ "op":"add", "path":"/"+[CACHE]+"/"+[UID], "value":1000000 })
-            document.getElementById('message').innerText = `❌ 超時!）`
+            document.getElementById('message').innerText = `❌ 超時!`
             WINCHECK = true
         }
     }
@@ -125,9 +126,9 @@ function checkAnswer() {
 
     if (userAnswer === correctAnswer) {
         clearInterval(interval);
-        document.getElementById('message').innerText = `✅ 正確答案！你花了 ${counter.toFixed(2)} 秒\n等待對手中...`;
+        document.getElementById('message').innerText = `✅ 正確答案！你花了 ${((Date.now() - startTime)/1000).toFixed(2)} 秒\n等待對手中...`;
         //-----------------------------------------start
-        sendToServer({ "op":"add", "path":"/"+[CACHE]+"/"+[UID], "value":counter.toFixed(2) })
+        sendToServer({ "op":"add", "path":"/"+[CACHE]+"/"+[UID], "value":((Date.now() - startTime)/1000).toFixed(2) })
         WINCHECK = true
         //-----------------------------------------end
 

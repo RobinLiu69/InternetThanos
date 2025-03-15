@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>打字速度測試</title>
-    <link rel="stylesheet" href="typeStyle.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="card">
@@ -13,9 +13,9 @@
         <textarea id="userInput" placeholder="開始輸入上面的文字..." oninput="checkTyping()"></textarea>
         <p id="timer">計時: 0 秒</p>
         <p id="result"></p>
-        <button onclick="startTest()">開始測試</button>
+        <button id="start" onclick="startTest()">開始測試</button>
     </div>
 
-    <script src="typeScript.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

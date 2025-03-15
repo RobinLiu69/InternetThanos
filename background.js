@@ -287,8 +287,8 @@ function serverIsAdmin(){
 
 async function serverCheckMatches(){
 	console.log("\n\n\n\n\nMATCH IS GOING \n\n\n\n\n")
-	//games = ["math.html", "typing.html", "cowboy.html", "maze.html"]
-	let games = ["/minigames/math/math.html"]
+	//games = ["/minigames/math/math.html", "/minigames/type/type.html", "cowboy.html", "maze.html"]
+	let games = ["/minigames/type/type.html"]
 	let tabs = await serverGetJSON(URLLINK)
     console.log("the tabs in serverCheckMatches : ", tabs)
 	for (let [url, uids] of tabs) {
