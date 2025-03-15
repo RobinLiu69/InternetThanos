@@ -2,13 +2,13 @@
     "manifest_version": 3,
     "name": "網路薩諾斯",
     "version": "1.0",
-    "description": "一個簡單的Chrome擴展範例",
+    "description": "把你的對手炸爛",
     "action": {
       "default_popup": "popup.html"
     },
     "background": {
       "service_worker": "background.js"
     },
-    "permissions": ["activeTab", "alarms", "audio", "background", "tabs", "storage"]
+    "permissions": ["activeTab", "alarms", "background", "tabs", "storage"]
   }
   

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>打字速度測試</title>
+    <link rel="stylesheet" href="typeStyle.css">
+</head>
+<body>
+    <div class="card">
+        <h1>打字速度測試</h1>
+        <p class="sentence" id="sentence"></p>
+        <textarea id="userInput" placeholder="開始輸入上面的文字..." oninput="checkTyping()"></textarea>
+        <p id="timer">計時: 0 秒</p>
+        <p id="result"></p>
+        <button onclick="startTest()">開始測試</button>
+    </div>
+
+    <script src="typeScript.js"></script>
+</body>
+</html>
