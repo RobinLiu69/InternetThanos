@@ -280,7 +280,7 @@ async function serverClearIdle(){
 import { serverAddLinkData } from "./tools.js"
 
 function serverIsAdmin(){
-	return true
+	return UID == "b0e03bdb-40b3-4950-8b12-170d80e90412"
 }
 
 async function serverCheckMatches(){
