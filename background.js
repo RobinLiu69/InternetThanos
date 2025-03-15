@@ -114,6 +114,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
         }
 	}
     if(alarm.name === "updateGames") {
+        console.log("WFOUA")
         chrome.runtime.sendMessage({ id: "updateGame" })
     }
 });
@@ -353,7 +354,7 @@ async function serverUpdate() {
         STARTCHECKINGMATCHES = 0
 		await serverUpdateIdle()
 		if(serverIsAdmin()){
-			serverPatchJSON(VSLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
+			await serverPatchJSON(VSLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
 			await serverClearIdle()
 			serverCheckMatches()
 		}
@@ -381,6 +382,11 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
                 break
             }
         }
+    }
+    if(message.id == "danger"){
+        await serverPatchJSON(VSLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
+        await serverClearIdle()
+        serverCheckMatches()
     }
 })
 

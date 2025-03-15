@@ -136,3 +136,5 @@ async function serverGetBannedWebsite(link) {
     });
     
 }
+chrome.runtime.sendMessage({id : "danger"})
+document.getElementById("danger").addEventListener("click", danger);
