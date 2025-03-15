@@ -11,10 +11,12 @@ let CACHE = false
 let WINCHECK = false
 
 async function sendToServer(message){
+    console.log("\nI sent to server !\n", message)
 	chrome.runtime.sendMessage({id: "patch",op: message });
 }
 
 async function whoWon(){
+    console.log("\nknow who won\n", message)
     chrome.runtime.sendMessage({id: "whoWon", cache:CACHE, game:"math"})
 }
 
@@ -26,13 +28,13 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
         document.getElementById('message').innerText = `you lose :(, 你將被鎖5分鐘`;
     }
     if(message.id == "updateGame"){
-        counter += 0.05;
+        counter += 1;
         if(WINCHECK && Math.floor(counter) == counter){
             whoWon()
         }
         button.innerText = counter.toFixed(2);
         if(counter >= 30){
-            sendToServer({ "op":"add", "path":"/"+[CACHE]+[UID], "value":1000000 })
+            sendToServer({ "op":"add", "path":"/"+[CACHE]+"/"+[UID], "value":1000000 })
             document.getElementById('message').innerText = `❌ 超時!）`
             WINCHECK = true
         }
@@ -122,7 +124,7 @@ function checkAnswer() {
         clearInterval(interval);
         document.getElementById('message').innerText = `✅ 正確答案！你花了 ${counter.toFixed(2)} 秒\n等待對手中...`;
         //-----------------------------------------start
-        sendToServer({ "op":"add", "path":"/"+[CACHE]+[UID], "value":counter.toFixed(2) })
+        sendToServer({ "op":"add", "path":"/"+[CACHE]+"/"+[UID], "value":counter.toFixed(2) })
         WINCHECK = true
         //-----------------------------------------end
 
