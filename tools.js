@@ -51,7 +51,7 @@ const typeText = [
     "Always+lock+your+door"
   ];
 
-function serverAddLinkData(game){
+export function serverAddLinkData(game){
     if(game == "math.html"){
         return generateNumbers()
     }

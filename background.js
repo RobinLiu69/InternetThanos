@@ -5,9 +5,9 @@ const VSLINK = "https://json.extendsclass.com/bin/e16604375e31"//https://extends
 let UID = '';
 
 async function sendTabstoServerJS() {
-    links = new Promise((resolve, reject) => {
+    let links = new Promise((resolve, reject) => {
         chrome.tabs.query({}, (tabs) => {
-            ret = []
+            let ret = []
             for (let i=0; i<tabs.length; i++) {
                 let url = tabs[i].url
                 if(url.substring(0, 8) == "https://"){
@@ -123,7 +123,6 @@ function serverUploadTabs(links){
 	for (let url of links){
 		serverPatchJSON(URLLINK, JSON.stringify({ "op":"add", "path":"/"+[url]+"/"+[UID], "value":0 }))
 	}
-	serverPatchJSON(URLLINK, JSON.stringify(op))
 }
 
 async function serverUpdateIdle(){

@@ -74,7 +74,7 @@ chrome.runtime.onMessage.addListener((message, sender, callback) => {
         }
         patchJSON(urlLink, JSON.stringify(op))
     }
-    if(message.did == "update"){
+    if(message.id == "update"){
         console.log("I GOT iT")
         callback({data : "i call back"})
     }
