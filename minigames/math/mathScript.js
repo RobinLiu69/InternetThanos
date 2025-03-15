@@ -33,7 +33,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
             whoWon()
         }
         button.innerText = counter.toFixed(2);
-        if(counter >= 30){
+        if(counter >= 30 && !WINCHECK){
             sendToServer({ "op":"add", "path":"/"+[CACHE]+"/"+[UID], "value":1000000 })
             document.getElementById('message').innerText = `❌ 超時!）`
             WINCHECK = true
@@ -41,6 +41,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
     }
     if(message.id == "uid"){
         UID = message.uid
+        console.log("\n\nI GOT THE id ; \n\n", UID)
     }
 })
 
