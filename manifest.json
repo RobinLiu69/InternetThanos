@@ -1,2 +1,14 @@
-
+{
+    "manifest_version": 3,
+    "name": "我的Chrome擴展",
+    "version": "1.0",
+    "description": "一個簡單的Chrome擴展範例",
+    "action": {
+      "default_popup": "popup.html"
+    },
+    "background": {
+      "service_worker": "background.js"
+    },
+    "permissions": ["activeTab", "alarms", "audio", "background", "tabs"]
+  }
   
