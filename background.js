@@ -229,13 +229,13 @@ async function serverCheckMatches(){
 }
 
 
+
 async function serverUpdate() {
-	let now = new Date();
-    let seconds = now.getSeconds();
-    // console.log(seconds);
-	chrome.runtime.sendMessage({id: "clock", message: null });
-	if(seconds == 0){
-		await serverUpdateIdle()
+	timeClock += 1
+	chrome.runtime.sendMessage({id: "clock", message: timeClock });
+    console.log(timeClock);
+	if(timeClock % 60 == 0){
+		//await serverUpdateIdle()
 		if(serverIsAdmin()){
 			serverPatchJSON(VSLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
 			await serverClearIdle()
