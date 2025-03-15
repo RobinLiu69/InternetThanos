@@ -79,7 +79,7 @@ chrome.runtime.onInstalled.addListener(async () => {
         }
     });
 });
-
+// Math.random() < 0.5 ? -1 : 1
 // {id : "tabs", data: }
 chrome.runtime.onInstalled.addListener(function() {
 	//startServer();
@@ -88,9 +88,9 @@ chrome.runtime.onInstalled.addListener(function() {
     chrome.alarms.create("updateClock", {
       periodInMinutes: 1/60 // Runs every 1 minute
     });
-    setInterval(() => {
-        checkBanned();
-    }, 1000);
+    chrome.alarms.create("updateGames", {
+        periodInMinutes: 1/60/20 // Runs every 0.05 sec
+    });
 });
 
 chrome.tabs.onCreated.addListener(() => {
@@ -113,6 +113,9 @@ chrome.alarms.onAlarm.addListener((alarm) => {
             clientCheckMatch()
         }
 	}
+    if(alarm.name === "updateGames") {
+        chrome.runtime.sendMessage({ id: "updateGame" })
+    }
 });
 
 // if 1 > 2 return true else false;
@@ -341,6 +344,7 @@ async function serverCheckMatches(){
 }
 
 async function serverUpdate() {
+    checkBanned();
 	let now = new Date();
     let seconds = now.getSeconds();
     // console.log(seconds);
@@ -360,7 +364,7 @@ import { seeWhoWon } from "./minigames/minigameTools.js"
 
 chrome.runtime.onMessage.addListener(async (message, sender, response) => {
     if(message.id == "patch"){
-        serverPatchJSON(VSLINK, JSON.stringify(op))
+        serverPatchJSON(VSLINK, JSON.stringify(message.op))
     }
     if(message.id == "whoWon"){
         let vs = await serverGetJSON(VSLINK)
@@ -373,6 +377,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
                 if(ret.loser == UID){
                     chrome.runtime.sendMessage({id: "lose"})
                 }
+                
                 break
             }
         }
