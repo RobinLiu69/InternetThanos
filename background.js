@@ -280,7 +280,7 @@ async function serverClearIdle(){
 import { serverAddLinkData } from "./tools.js"
 
 function serverIsAdmin(){
-	return true
+	return false;
 }
 
 async function serverCheckMatches(){
