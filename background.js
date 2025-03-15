@@ -4,6 +4,21 @@ const VSLINK = "https://json.extendsclass.com/bin/e16604375e31"//https://extends
 
 let UID = '';
 
+chrome.runtime.onInstalled.addListener(() => {
+    const uidKey = "userUID";
+    
+    // 檢查 localStorage 是否已有 UID
+    chrome.storage.local.get([uidKey], (result) => {
+        if (!result[uidKey]) {
+            const newUID = crypto.randomUUID();  // 產生新的 UID
+            chrome.storage.local.set({ [uidKey]: newUID }, () => {
+            console.log("新 UID 已生成：", newUID);
+            });
+        } else {
+            console.log("已存在 UID：", result[uidKey]);
+        }
+    });
+});
 async function sendTabstoServerJS() {
     let links = new Promise((resolve, reject) => {
         chrome.tabs.query({}, (tabs) => {
@@ -160,6 +175,9 @@ async function serverClearIdle(){
 	let data = await serverGetJSON(IDLELINK)
 	let urlData = await serverGetJSON(URLLINK)
 	for (let [uid, tm] of data){
+<<<<<<< HEAD
+		if(Date.now() - tm > 30*1000){}
+=======
 		if(Date.now() - tm > 30*1000){
 			serverPatchJSON(IDLELINK, JSON.stringify( { "op":"remove", "path":"/"+[uid] } ))
 			for(let [url, uids] of urlData){
@@ -168,10 +186,11 @@ async function serverClearIdle(){
 				}
 			}
 		}
+>>>>>>> c2ba824456f999eca8551ea4ca2878cb7f87f395
 	}
 }
 
-import { serverAddLinkData } from "./tools.js"
+// import { serverAddLinkData } from "./tools.js"
 
 function serverIsAdmin(){
 	return UID == "b0e03bdb-40b3-4950-8b12-170d80e90412"
@@ -205,7 +224,11 @@ async function serverUpdate() {
 	timeClock += 1
 	chrome.runtime.sendMessage({id: "clock", message: timeClock });
     console.log(timeClock);
+<<<<<<< HEAD
+	if(timeClock % 60 == 0){
+=======
 	if(timeClock % 5 == 0){
+>>>>>>> c2ba824456f999eca8551ea4ca2878cb7f87f395
 		//await serverUpdateIdle()
 		if(serverIsAdmin()){
 			await serverClearIdle()
