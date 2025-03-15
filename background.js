@@ -282,7 +282,7 @@ async function serverClearIdle(){
 import { serverAddLinkData } from "./tools.js"
 
 function serverIsAdmin(){
-	return UID == "b0e03bdb-40b3-4950-8b12-170d80e90412"
+	return true
 }
 
 async function serverCheckMatches(){
@@ -338,7 +338,7 @@ async function serverUpdate() {
 		if(serverIsAdmin()){
             console.log("adminGOadminGOadminGOadminGOadminGOadminGOadminGOadminGO")
 			await serverPatchJSON(VSLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
-			await serverClearIdle()
+			//await serverClearIdle()
 			serverCheckMatches()
 		}
 	}
@@ -374,7 +374,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
         if(serverIsAdmin()){
             console.log("adminGOadminGOadminGOadminGOadminGOadminGOadminGOadminGO")
 			await serverPatchJSON(VSLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
-			await serverClearIdle()
+			//await serverClearIdle()
 			serverCheckMatches()
 		}
         STARTCHECKINGMATCHES = 0
