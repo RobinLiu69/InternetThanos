@@ -10,16 +10,47 @@ body {
 }
   
   /* 標題樣式 */
-h1 {
-    color: #007bff;
-    font-size: 22px;
-    margin-bottom: 10px;
+  h1 {
+    color: #0ff;
+    text-shadow: 0 0 10px #0ff;
+    animation: colorChange 10s infinite;
+}
+@keyframes colorChange {
+    0% {
+        color: #0ff; /* Cyan (default color) */
+        text-shadow: 0 0 10px #0ff;
+    }
+    14% {
+        color: #ff0000; /* Ruby Red */
+        text-shadow: 0 0 10px #ff0000;
+    }
+    28% {
+        color: #ffcc00; /* Amber */
+        text-shadow: 0 0 10px #ffcc00;
+    }
+    42% {
+        color: #800080; /* Amethyst Purple */
+        text-shadow: 0 0 10px #800080;
+    }
+    56% {
+        color: #0000ff; /* Sapphire Blue */
+        text-shadow: 0 0 10px #0000ff;
+    }
+    70% {
+        color: #ff1493; /* Tourmaline Pink */
+        text-shadow: 0 0 10px #ff1493;
+    }
+    85% {
+        color: #00ff00; /* Emerald Green */
+        text-shadow: 0 0 10px #00ff00;
+    }
 }
   
 h2 {
     font-size: 18px;
     margin: 15px 0 10px;
-    color: #555;
+    color: #d4d4d4;
+    text-shadow: 0 0 10px #d4d4d4;
 }
   
   /* 輸入框和按鈕樣式 */
@@ -94,6 +125,11 @@ li:last-child {
     width: 300px;
     top: 50%;
 }
+
+#tabList li:hover {
+    background: rgba(100, 100, 100, 0.2);
+}
+
 .clock-container {
   width: 150px;
   height: 150px;
@@ -119,6 +155,12 @@ li:last-child {
   transform: scale(1.1);
   box-shadow: 0 0 50px rgba(108, 8, 95, 1);
 }
+
+#clock {
+    text-shadow: 0 0 8px #fff;
+    font-weight: bold;
+}
+
   /* 超連結樣式 */
 a {
     color: #007bff;

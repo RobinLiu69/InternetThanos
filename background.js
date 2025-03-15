@@ -93,7 +93,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 //--------------------------------------------------------------------------------------------
 
 async function serverPatchJSON(link, payload) {
-    fetch(link, {
+    await fetch(link, {
         method: "PATCH",
         mode: "cors",
         headers: {
@@ -107,29 +107,34 @@ async function serverPatchJSON(link, payload) {
 }
 
 async function serverGetJSON(link) {
-    // Fetch the response
-    let response = await fetch(link + "?cache=" + Date.now().toString(), {
+    let responseJSON = await fetch(link, {
         method: "GET",
-        headers: {}
-    });
-    
-    // Parse the response as JSON
-    let jsonData = await response.json();
-    
-    // Convert the JSON object to a Map
-    return new Map(Object.entries(jsonData));
+        mode: "cors",
+        headers: {
+            cache: "no-store"
+        },
+    })
+    console.log("Got this from a cool place : ", link)
+    let iddwadwak = await responseJSON.json()
+    iddwadwak = new Map(Object.entries(iddwadwak))
+	for (let [a, b] of iddwadwak){
+		
+	}
+    return iddwadwak
 }
 
 
 async function serverUploadTabs(links){
 	let origJSON = await serverGetJSON(URLLINK)
-	console.log(links)
+
+	console.log("the link", links)
 	console.log("UID : ", UID)
 	//for (let url of links){
 	//	console.log("adding : ", url)
 	//	serverPatchJSON(URLLINK, JSON.stringify({ "op":"add", "path":"/"+[url], "value":0 }))
 	//}
-	console.log("in upload tabs : ", JSON.stringify(origJSON))
+	
+
 	for (let url of links) {
         //console.log(url, "tf : ", origJSON.has(url))
         if(!origJSON.has(url)) {
@@ -158,7 +163,7 @@ async function serverClearIdle(){
 		if(Date.now() - tm > 30*1000){
 			serverPatchJSON(IDLELINK, JSON.stringify( { "op":"remove", "path":"/"+[uid] } ))
 			for(let [url, uids] of urlData){
-				if(uids.has(uid)){
+				if(uid in uids){
 					serverPatchJSON(IDLELINK, JSON.stringify( { "op":"remove", "path":"/"+[url]+"/"+[uid] } ))
 				}
 			}
@@ -178,6 +183,7 @@ async function serverCheckMatches(){
 	let tabs = await serverGetJSON(URLLINK)
 	for (let [url, uids] of tabs) {
 		let uid2 = false
+		uids = new Map(Object.entries(uids))
 		for (let [uid1, empty] of uids){
             if(!uid2){
 				uid2 = uid1
