@@ -1,0 +1,87 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #000000;
+    margin: 0;
+}
+
+.game-container {
+    text-align: center;
+    padding: 20px;
+    background-color: rgb(0, 0, 0);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+h1 {
+    font-size: 10rem;
+    color: white;
+}
+.dice-container {
+    gap: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+div[id^="dice"] {
+    width: 80px;
+    height: 80px;
+    border: 2px solid rgb(255, 255, 255);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    cursor: pointer;
+    user-select: none;
+    background-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+    transition: background-color 0.2s;
+    border-radius: 10px;
+}
+
+div[id^="dice"].locked {
+    background-color: lightgray;
+    cursor: not-allowed;
+    display: flex;
+    border-radius: 18px;
+}
+
+button {
+    padding: 30px 60px;
+    font-size: 2rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+}
+
+button:disabled {
+    background-color: #888;
+    cursor: not-allowed;
+}
+
+p {
+    margin-top: 10px;
+    font-size: 3rem;
+    color: white;
+}
+
+#status-message{
+    color: white;
+    font-size: 2.5rem;
+}
+
+#score-message {
+    color: white;
+    font-size: 2.5rem;
+}
+
+#final-score-message{
+    color: white;
+    font-size: 2.5rem;
+}
