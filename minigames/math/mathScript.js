@@ -29,9 +29,9 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
 
 function getUIDAndMain() {
     const params = new URLSearchParams(window.location.search);
-    UID = params.get("uid"); // 取得 "uid" 參數
-    MAIN = params.get("uid"); // 取得 "uid" 參數
-    CACHE = params.get("vslink")
+    UID = params.get("uid");
+    MAIN = pparams.get("isMain");
+    CACHE = params.get("vslink");
 }
 //-----------------------------------------end
 
@@ -69,6 +69,7 @@ function calculateAnswer(expression) {
 
 // ✅ 初始化題目
 function loadQuestion() {
+    getUIDAndMain()
     const problem = getProblemFromURL();
     if (!problem) {
         document.getElementById('question').innerText = "❌ 無法獲取題目";
@@ -130,3 +131,5 @@ function checkAnswer() {
 
 // 初始化題目
 loadQuestion();
+
+document.getElementById("sendText").addEventListener("click", sendText);

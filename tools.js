@@ -52,7 +52,7 @@ const typeText = [
   ];
 
 export function serverAddLinkData(game){
-    if(game == "math.html"){
+    if(game.includes("math.html")){
         return generateNumbers()
     }
     if(game == "type.html"){

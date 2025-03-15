@@ -109,10 +109,13 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 });
 
 async function clientCheckMatch(){
+    console.log("hi im checking")
     let vs = await serverGetJSON(VSLINK)
     for(let [uids, data] of vs){
         if(uids.includes(UID)){
-            chrome.tabs.create({url: data.get("game")})
+            console.log("YoOOO THERE IT ISSSSSSSSSSSSSSSSSSSSSSSSS : ", data, data.game)
+            chrome.tabs.create({url: data.game})
+            STARTCHECKINGMATCHES = 10
         }
     }
 }
@@ -221,7 +224,7 @@ function serverIsAdmin(){
 async function serverCheckMatches(){
 	console.log("\n\n\n\n\nMATCH IS GOING \n\n\n\n\n")
 	//games = ["math.html", "typing.html", "cowboy.html", "maze.html"]
-	let games = ["math.html"]
+	let games = ["/minigames/math/math.html"]
 	let tabs = await serverGetJSON(URLLINK)
 	for (let [url, uids] of tabs) {
 		let uid2 = false
@@ -235,11 +238,11 @@ async function serverCheckMatches(){
 				let x = uid1+"-"+uid2+dateCache
 				let game = games[Math.floor(Math.random()*games.length)];
                 let isMain = UID == uid1
-				game = game + serverAddLinkData(game) + ",uid=" + [UID] + ",vslink=" + x + ",isMain="
+				game = game + serverAddLinkData(game) + "&uid=" + UID + "&vslink=" + x + "&isMain="
                 if(isMain) game = game+"true";
                 else game = game+"false";
 				console.log("\n\n, there is a match!!! : ", uid1, uid2)
-				serverPatchJSON(VSLINK, JSON.stringify({"op": "add", "path": "/"+[x], "value": {"game" : [game], [uid1] : "", [uid2] : "", "uids": [uid1, uid2]} }))
+				serverPatchJSON(VSLINK, JSON.stringify({"op": "add", "path": "/"+[x], "value": {"game" : game, uid1 : "", uid2 : "", "uids": [uid1, uid2], "origUrl":url} }))
 				uid2 = false
 			}
 		}
