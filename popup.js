@@ -79,12 +79,11 @@ chrome.runtime.onMessage.addListener((message, sender, callback) => {
         callback({data : "i call back"})
     }
     if(message.id == "clock"){
-        console.log(message.message)
+        // console.log(message.message)
         const li = document.getElementById("clock");
         const leftTime = 60-message.message%60;
         li.textContent = leftTime;
         const progress = leftTime / 60 * 100;
-        console.log(progress);
         const clock = document.getElementById('clock');
         clock.style.setProperty('--progress', `${progress}%`);
     }

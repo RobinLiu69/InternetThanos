@@ -181,7 +181,7 @@ async function serverClearIdle(){
 	}
 }
 
-// import { serverAddLinkData } from "./tools.js"
+import { serverAddLinkData } from "./tools.js"
 
 function serverIsAdmin(){
 	return UID == "b0e03bdb-40b3-4950-8b12-170d80e90412"
@@ -213,7 +213,6 @@ let timeClock = -1
 async function serverUpdate() {
 	timeClock += 1
 	chrome.runtime.sendMessage({id: "clock", message: timeClock });
-    console.log(timeClock);
 	if(timeClock % 60 == 0){
 		//await serverUpdateIdle()
 		if(serverIsAdmin()){
