@@ -22,11 +22,19 @@ document.addEventListener("DOMContentLoaded", function () {
   // 添加名稱到列表
   addNameBtn.addEventListener("click", function () {
     let name = nameInput.value.trim();
+    console.log(nameList.childElementCount)
     if (name) {
-      let li = document.createElement("li");
-      li.textContent = name;
-      nameList.appendChild(li);
-      nameInput.value = "";
+        if(nameList.childElementCount > 0){
+            let usernameli = document.getElementById("username");
+            usernameli.textContent = name
+        }
+        else{
+            let li = document.createElement("li");
+            li.textContent = name;
+            li.id = "username";
+            nameList.appendChild(li);
+            nameInput.value = "";
+        }
     }
   });
 });

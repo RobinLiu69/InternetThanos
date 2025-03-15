@@ -67,6 +67,7 @@ li {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    text-align: left;
 }
   
   /* 清單最後一項無底線 */
