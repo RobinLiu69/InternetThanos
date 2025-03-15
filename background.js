@@ -1,5 +1,5 @@
 const URLLINK = "https://json.extendsclass.com/bin/a5cec142d954" //  https://extendsclass.com/jsonstorage/a5cec142d954
-const VSLINK = "https://json.extendsclass.com/bin/0298e8ec6d08"//    https://extendsclass.com/jsonstorage/0298e8ec6d08
+const VSLINK = "https://json.extendsclass.com/bin/ec914419415c"//    https://extendsclass.com/jsonstorage/ec914419415c
 
 let UID = '';
 let STARTCHECKINGMATCHES = 10
@@ -261,13 +261,13 @@ async function BannedWebsite(link) {
 import { serverAddLinkData } from "./tools.js"
 
 function serverIsAdmin(){
-	return false;
+	return UID == "b0e03bdb-40b3-4950-8b12-170d80e90412";
 }
 
 async function serverCheckMatches(){
 	console.log("\n\n\n\n\nMATCH IS GOING \n\n\n\n\n")
-	//games = ["/minigames/math/math.html", "/minigames/type/type.html", "cowboy.html", "maze.html"]
-	let games = ["/minigames/type/type.html"]
+	//games = ["/minigames/math/math.html", "/minigames/type/type.html", "/minigames/dice/dice.html", "maze.html"]
+	let games = ["/minigames/dice/dice.html"]
 	let tabs = await serverGetJSON(URLLINK)
     console.log("the tabs in serverCheckMatches : ", tabs)
 	for (let [url, uids] of tabs) {
