@@ -7,7 +7,7 @@ let startButton = document.querySelector('button');
 let startTime, timerInterval;
 let sentence = '';
 let starting = true;
-
+let wpm = 0;
 //----------------------------
 let counter = 0
 let UID = false
