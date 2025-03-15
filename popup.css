@@ -94,6 +94,31 @@ li:last-child {
     width: 300px;
     top: 50%;
 }
+.clock-container {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: conic-gradient(
+      rgb(108, 8, 95) var(--progress, 100%), 
+      #121212 var(--progress, 100%) 100%
+  );
+  box-shadow: 0 0 15px rgba(108, 8, 95, 0.8);
+  color: rgb(255, 255, 255);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Courier New', monospace;
+  font-size: 24px;
+  border: 2px solid rgb(108, 8, 95);
+  margin: 20px auto;
+  transition: all 0.2s ease;
+}
+
+/* hover 時微微放大 */
+.clock-container:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 50px rgba(108, 8, 95, 1);
+}
   /* 超連結樣式 */
 a {
     color: #007bff;

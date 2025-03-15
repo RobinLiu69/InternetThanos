@@ -1,0 +1,18 @@
+body {
+  background-color: #121212; /* 深色背景 */
+  color: #f0f0f0; /* 文字亮色 */
+  text-align: center;
+}
+canvas {
+  border: 2px solid #444;
+}
+#status {
+  font-size: 18px;
+  margin-top: 10px;
+  color: #e0e0e0;
+}
+#timer {
+  font-size: 18px;
+  margin-top: 10px;
+  color: #e0e0e0;
+}
