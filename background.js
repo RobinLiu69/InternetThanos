@@ -3,7 +3,6 @@ const IDLELINK = "https://json.extendsclass.com/bin/d9a563320dff" //https://exte
 const VSLINK = "https://json.extendsclass.com/bin/e16604375e31"//https://extendsclass.com/jsonstorage/e16604375e31
 
 let UID = '';
-let ISADMIN = false
 
 async function sendTabstoServerJS() {
     links = new Promise((resolve, reject) => {
@@ -132,13 +131,25 @@ async function serverUpdateIdle(){
 }
 
 async function serverClearIdle(){
-	data = await serverGetJSON(URLLINK)
+	data = await serverGetJSON(IDLELINK)
+	urlData = await serverGetJSON(URLLINK)
 	for (let [uid, tm] of data){
-		if(Date.now() - tm > 30*1000)
+		if(Date.now() - tm > 30*1000){
+			serverPatchJSON(IDLELINK, JSON.stringify( { "op":"remove", "path":"/"+[uid] } ))
+			for(let [url, uids] of urlData){
+				if(uids.has(uid)){
+					serverPatchJSON(IDLELINK, JSON.stringify( { "op":"remove", "path":"/"+[url]+"/"+[uid] } ))
+				}
+			}
+		}
 	}
 }
 
 import { serverAddLinkData } from "./tools.js"
+
+function serverIsAdmin(){
+	return UID == "b0e03bdb-40b3-4950-8b12-170d80e90412"
+}
 
 async function serverCheckMatches(){
 	//games = ["math.html", "typing.html", "cowboy.html", "maze.html"]
@@ -168,7 +179,7 @@ async function serverUpdate() {
 	
 	if(timeClock % 60 == 0){
 		//await serverUpdateIdle()
-		if(ISADMIN){
+		if(serverIsAdmin()){
 			await serverClearIdle()
 			serverCheckMatches()
 		}
