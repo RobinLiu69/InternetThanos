@@ -91,3 +91,47 @@ chrome.runtime.onMessage.addListener((message, sender, callback) => {
         clock.style.setProperty('--progress', `${progress}%`);
     }
 })
+
+
+function formatTime(min, hour) {
+    let now = new Date();
+    let date = now.getDate();
+    now.setMinutes(now.getMinutes() + min);
+    now.setHours(now.getHours() + hour);
+    let hours = now.getHours().toString().padStart(2, '0');  // 取得小時並補齊兩位
+    let minutes = now.getMinutes().toString().padStart(2, '0');  // 取得分鐘並補齊兩位
+    
+    return `${date}:${hours}:${minutes}`;  // 返回格式為 'HH:mm' 的字串
+}
+
+function getStorage(key){
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get([key], (result) => {
+            if (result[key]) {
+                resolve(result[key]);  // 如果找到資料，解析資料
+            } else {
+                resolve("Nothing");  // 如果沒找到資料，解析 "Nothing"
+            }
+        } )
+    })
+
+}
+
+async function serverGetBannedWebsite(link) {
+    let time = formatTime(50, 0);
+    console.log(time);
+    let bannedWebsites = await getStorage("bannedWebsites");
+    
+    console.log(bannedWebsites);
+    if (bannedWebsites == "Nothing") {
+        bannedWebsites = {};
+    } else{ 
+        bannedWebsites = JSON.parse(bannedWebsites);
+    }   
+    bannedWebsites[link] = time;
+    console.log(bannedWebsites);
+    chrome.storage.local.set({ "bannedWebsites": JSON.stringify(bannedWebsites) }, () => {
+        console.log("網站守門員設定完成");
+    });
+    
+}

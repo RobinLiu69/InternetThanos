@@ -2,7 +2,11 @@ const URLLINK = "https://json.extendsclass.com/bin/1684885865a7" // https://exte
 const IDLELINK = "https://json.extendsclass.com/bin/d9a563320dff" //https://extendsclass.com/jsonstorage/d9a563320dff
 const VSLINK = "https://json.extendsclass.com/bin/e16604375e31"//https://extendsclass.com/jsonstorage/e16604375e31
 
+
+
 let UID = '';
+
+
 
 chrome.runtime.onInstalled.addListener(() => {
     const uidKey = "userUID";
@@ -82,6 +86,7 @@ chrome.runtime.onInstalled.addListener(function() {
     chrome.alarms.create("updateClock", {
       periodInMinutes: 1/60 // Runs every 1 minute
     });
+    setInterval(checkBanned, 1000);
 });
 
 chrome.tabs.onCreated.addListener(() => {
@@ -101,6 +106,36 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 		serverUpdate()
 	}
 });
+function checkBanned(){
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (tabs.length > 0) {
+            const tabUrl = tabs[0].url;
+            const originUrl = new URL(tabUrl).origin;  // 獲取主網址
+            console.log("完整網址:", tabUrl);
+            console.log("主網址:", originUrl);
+            
+            chrome.storage.local.get(["bannedWebsites"], (result) => {
+                if (!result["checkBannedWebsite"]) {
+                    console.log("nope")
+                    // return;
+                } 
+                let bannedWebsites = new Set("https://www.youtube.com");
+                // let websites = JSON.parse(result["checkBannedWebsite"]);
+                let time = formatTime(0, 0);
+                console.log(time);
+                // websites.forEach((value, key) => {
+                //     console.log(key, value);
+                // });        
+                console.log(bannedWebsites.has(originUrl));
+                if(bannedWebsites.has(originUrl) && tabUrl != "https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley"){
+                    console.log(123)
+                    chrome.tabs.update(tabs[0].id, { url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley" });
+                }
+            } )
+            
+        }
+    });
+}
 
 //--------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------
@@ -138,7 +173,6 @@ async function serverGetJSON(link) {
     return iddwadwak
 }
 
-
 async function serverUploadTabs(links){
 	let origJSON = await serverGetJSON(URLLINK)
 
@@ -166,6 +200,50 @@ async function serverUploadTabs(links){
         }
     }
 }
+
+function formatTime(min, hour) {
+    let now = new Date();
+    let date = now.getDate();
+    now.setMinutes(now.getMinutes() + min);
+    now.setHours(now.getHours() + hour);
+    let hours = now.getHours().toString().padStart(2, '0');  // 取得小時並補齊兩位
+    let minutes = now.getMinutes().toString().padStart(2, '0');  // 取得分鐘並補齊兩位
+    
+    return `${date}:${hours}:${minutes}`;  // 返回格式為 'HH:mm' 的字串
+}
+
+function getStorage(key){
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get([key], (result) => {
+            if (result[key]) {
+                resolve(result[key]);  // 如果找到資料，解析資料
+            } else {
+                resolve("Nothing");  // 如果沒找到資料，解析 "Nothing"
+            }
+        } )
+    })
+
+}
+
+async function serverGetBannedWebsite(link) {
+    let time = formatTime(50, 0);
+    console.log(time);
+    let bannedWebsites = await getStorage("bannedWebsites");
+    
+    console.log(bannedWebsites);
+    if (bannedWebsites == "Nothing") {
+        bannedWebsites = {};
+    } else{ 
+        bannedWebsites = JSON.parse(bannedWebsites);
+    }   
+    bannedWebsites[link] = time;
+    console.log(bannedWebsites);
+    chrome.storage.local.set({ "bannedWebsites": JSON.stringify(bannedWebsites) }, () => {
+        console.log("網站守門員設定完成");
+    });
+    
+}
+
 
 async function serverUpdateIdle(){
 	await serverPatchJSON(IDLELINK, JSON.stringify( { "op":"add", "path":"/"+[UID], "value":Date.now() } ))
