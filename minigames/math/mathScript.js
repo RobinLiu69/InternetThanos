@@ -4,6 +4,37 @@ let interval;
 let correctAnswer = null;
 let wrongAttempts = 0;
 
+//-----------------------------------------start
+let UID = false
+let MAIN = false
+let CACHE = false
+let WINCHECK = false
+
+async function sendToServer(message){
+	chrome.runtime.sendMessage({id: "patch",op: message });
+}
+
+async function whoWon(){
+    chrome.runtime.sendMessage({id: "whoWon", cache:CACHE, game:"math"})
+}
+
+chrome.runtime.onMessage.addListener(async (message, sender, response) => {
+    if(message.id == "win"){
+        document.getElementById('message').innerText = `✅ 正確答案！你花了 ${counter.toFixed(2)} 秒\nYOU WIN!!!`;
+    }
+    if(message.id == "lose"){
+        document.getElementById('message').innerText = `you lose :(, 你將被鎖5分鐘`;
+    }
+})
+
+function getUIDAndMain() {
+    const params = new URLSearchParams(window.location.search);
+    UID = params.get("uid"); // 取得 "uid" 參數
+    MAIN = params.get("uid"); // 取得 "uid" 參數
+    CACHE = params.get("vslink")
+}
+//-----------------------------------------end
+
 // ✅ 從 URL 讀取數學題目
 function getProblemFromURL() {
     const params = new URLSearchParams(window.location.search);
@@ -61,12 +92,21 @@ function loadQuestion() {
     clearInterval(interval);
     interval = setInterval(() => {
         counter += 0.05;
+        if(WINCHECK && Math.floor(counter) == counter){
+            whoWon()
+        }
         button.innerText = counter.toFixed(2);
     }, 50);
 }
 
 // ✅ 檢查使用者答案
 function checkAnswer() {
+    //---------------start
+    if(WINCHECK){
+        return
+    }
+    //---------------end
+
     const userAnswer = parseFloat(document.getElementById('userAnswer').value);
 
     if (isNaN(userAnswer)) {
@@ -76,7 +116,12 @@ function checkAnswer() {
 
     if (userAnswer === correctAnswer) {
         clearInterval(interval);
-        document.getElementById('message').innerText = `✅ 正確答案！你花了 ${counter.toFixed(2)} 秒`;
+        document.getElementById('message').innerText = `✅ 正確答案！你花了 ${counter.toFixed(2)} 秒\n等待對手中...`;
+        //-----------------------------------------start
+        sendToServer({ "op":"add", "path":"/"+[CACHE]+[UID], "value":counter.toFixed(2) })
+        WINCHECK = true
+        //-----------------------------------------end
+
     } else {
         wrongAttempts++;
         document.getElementById('message').innerText = `❌ 錯誤！再試一次（錯誤次數: ${wrongAttempts}）`;
