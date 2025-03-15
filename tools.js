@@ -1,6 +1,6 @@
 function generateNumbers() {
-    num1 = Math.floor(Math.random() * 100) + 1;
-    num2 = Math.floor(Math.random() * 100) + 1;
+    let num1 = Math.floor(Math.random() * 100) + 1;
+    let num2 = Math.floor(Math.random() * 100) + 1;
 
     const operators = ['+', '-', '*', '/'];
     let operator = operators[Math.floor(Math.random() * operators.length)];
