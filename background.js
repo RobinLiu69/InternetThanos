@@ -340,10 +340,16 @@ async function serverUpdate() {
     // console.log(seconds);
 	chrome.runtime.sendMessage({id: "clock", message: null });
     checkBanned();
+    if(second == 40){
+        await serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
+        LASTLINKS = new Map()
+        await sendTabstoServerJS()
+    }
 	if(seconds == 0){
         STARTCHECKINGMATCHES = 0
 		await serverUpdateIdle()
 		if(serverIsAdmin()){
+            
 			await serverPatchJSON(VSLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
 			await serverClearIdle()
 			serverCheckMatches()
@@ -376,6 +382,9 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
     }
     if(message.id == "danger"){
         console.log("\nOH NO IM IN DANGER\n")
+        await serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
+        LASTLINKS = new Map()
+        await sendTabstoServerJS()
         await serverPatchJSON(VSLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
         await serverClearIdle()
         serverCheckMatches()
