@@ -367,6 +367,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
                 }
                 if(ret.loser == UID){
                     chrome.runtime.sendMessage({id: "lose"})
+                    console.log("AAAAAAAAAAAAA");
                     BannedWebsite(vs.origUrl);
                 }
                 break
