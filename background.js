@@ -1,6 +1,6 @@
-const URLLINK = "https://json.extendsclass.com/bin/1684885865a7" // https://extendsclass.com/jsonstorage/1684885865a7
-const IDLELINK = "https://json.extendsclass.com/bin/d9a563320dff" //https://extendsclass.com/jsonstorage/d9a563320dff
-const VSLINK = "https://json.extendsclass.com/bin/e16604375e31"//https://extendsclass.com/jsonstorage/e16604375e31
+const URLLINK = "https://json.extendsclass.com/bin/fe273cc038a4" // https://extendsclass.com/jsonstorage/fe273cc038a4
+const IDLELINK = "https://json.extendsclass.com/bin/688c7ed03e87" //https://extendsclass.com/jsonstorage/688c7ed03e87
+const VSLINK = "https://json.extendsclass.com/bin/ac25af8d762b"//https://extendsclass.com/jsonstorage/ac25af8d762b
 
 
 
@@ -312,7 +312,7 @@ async function serverCheckMatches(){
                 if(isMain) game = game+"true";
                 else game = game+"false";
 				console.log("\n\n, there is a match!!! : ", uid1, uid2)
-				serverPatchJSON(VSLINK, JSON.stringify({"op": "add", "path": "/"+[x], "value": {"game" : game, uid1 : "", uid2 : "", "uids": [uid1, uid2], "origUrl":url} }))
+				serverPatchJSON(VSLINK, JSON.stringify({"op": "add", "path": "/"+[x], "value": {"game" : game, [uid1] : "", [uid2] : "", "uids": [uid1, uid2], "origUrl":url} }))
 				uid2 = false
 			}
 		}
