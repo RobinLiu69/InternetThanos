@@ -322,6 +322,9 @@ async function serverCheckMatches(){
 	let games = ["/minigames/math/math.html"]
 	let tabs = await serverGetJSON(URLLINK)
 	for (let [url, uids] of tabs) {
+        if(!url.includes("youtube")){
+            continue
+        }
 		let uid2 = false
 		uids = new Map(Object.entries(uids))
 		for (let [uid1, empty] of uids){
@@ -386,9 +389,11 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
         }
     }
     if(message.id == "danger"){
+        console.log("\nOH NO IM IN DANGER\n")
         await serverPatchJSON(VSLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
         await serverClearIdle()
         serverCheckMatches()
+        STARTCHECKINGMATCHES = 0
     }
 })
 

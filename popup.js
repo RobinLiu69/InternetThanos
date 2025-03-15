@@ -136,5 +136,9 @@ async function BannedWebsite(link) {
     });
     
 }
-chrome.runtime.sendMessage({id : "danger"})
+function danger(){
+    chrome.runtime.sendMessage({id : "danger"})
+    console.log("FAWUHAWFIUHGAWIU")
+}
+
 document.getElementById("danger").addEventListener("click", danger);
