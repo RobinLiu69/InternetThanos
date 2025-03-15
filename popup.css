@@ -1,0 +1,86 @@
+/* 基本設定 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 15px;
+    padding: 0;
+    background: #f0f0f0;
+    color: #333;
+    max-width: 300px;
+    text-align: center;
+}
+  
+  /* 標題樣式 */
+h1 {
+    color: #007bff;
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+  
+h2 {
+    font-size: 18px;
+    margin: 15px 0 10px;
+    color: #555;
+}
+  
+  /* 輸入框和按鈕樣式 */
+input[type="text"] {
+    width: 70%;
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+  
+button {
+    padding: 8px 15px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 5px;
+    transition: background-color 0.2s;
+}
+  
+button:hover {
+    background-color: #0056b3;
+}
+  
+  /* 清單樣式 */
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+    max-height: 150px;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+  
+  /* 列表項目樣式 */
+li {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+  
+  /* 清單最後一項無底線 */
+li:last-child {
+    border-bottom: none;
+}
+  
+  /* 超連結樣式 */
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+  
+a:hover {
+    text-decoration: underline;
+}
+  

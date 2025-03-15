@@ -3,10 +3,19 @@ const syncLink = "https://json.extendsclass.com/bin/d9a563320dff" //https://exte
 const vsLink = "https://json.extendsclass.com/bin/e16604375e31"//https://extendsclass.com/jsonstorage/e16604375e31
 let UID = false
 
-async function getTabs() {
-  return new Promise((resolve, ))
+async function sendTabstoServerJS() {
+    message = [];
+    if (chrome.tabs) {
+        chrome.tabs.query({}, function (tabs) {
+          tabs.forEach(tab => {
+            message.push(tab.title);
+          });
+        });
+      }
+    chrome.runtime.sendMessage({links: message});
 }
+
 
 chrome.runtime.onInstalled.addListener(function() {
     console.log("擴展已安裝");
-  });
+});
