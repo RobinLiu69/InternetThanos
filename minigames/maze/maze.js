@@ -28,7 +28,7 @@ async function sendToServer(message){
 
 async function whoWon(){
     // console.log("\nknow who won\n", message)
-    chrome.runtime.sendMessage({id: "whoWon", cache:CACHE, game:"math"})
+    chrome.runtime.sendMessage({id: "whoWon", cache:CACHE, game:"maze"})
 }
 
 chrome.runtime.onMessage.addListener(async (message, sender, response) => {
@@ -43,7 +43,6 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
         if(WINCHECK && Math.floor(counter) == counter && counter < 30 && counter % 3 == 0){
             whoWon()
         }
-        button.innerText = ((Date.now() - startTime)/1000).toFixed(2);
         if(counter >= 30 && !WINCHECK){
             sendToServer({ "op":"add", "path":"/"+[CACHE]+"/"+[UID], "value":1000000 })
             document.getElementById('message').innerText = `❌ 超時!`

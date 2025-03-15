@@ -67,6 +67,7 @@ function getProblemFromURL() {
 // 開始測試
 function startTest() {
     // 取得 URL 中的問題文字
+    getUIDAndMain()
     sentence = getProblemFromURL();
     
     // 如果 URL 中沒有問題文字，顯示錯誤
@@ -111,9 +112,10 @@ function checkTyping() {
     let userInput = userInputElement.value;
     
     // 如果用戶輸入正確，停止測試
-    if (userInput === sentence) {
+    if (userInput == sentence) {
+        alert("woawhoiwh")
         clearInterval(timerInterval);
-        let elapsedTime = ((Date.now() - startTime)/1000).toFixed(2);
+        let elapsedTime = ((Date.now() - startTime)/1000).toFixed(4);
         let wpm = calculateWPM(elapsedTime, sentence);
         resultElement.innerText = `✅ 正確！你完成了這段文字。\n打字速度: ${wpm} 字/分鐘`;
         isTesting = false;
@@ -133,4 +135,4 @@ function calculateWPM(timeInSeconds, text) {
     return Math.round(words / minutes);
 }
 
-document.getElementById("start").addEventListener("click", startTest);
+startTest()
