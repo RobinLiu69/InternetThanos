@@ -12,18 +12,33 @@ async function patchJSON(link, op){
         method : "PATCH",
         headers : {
             "Content-type": "application/json-patch+json",
+            cache: "no-store"
         },
         body : op
     })
 }
 
-chrome.runtime.onMessage.addListener((message) => {
+async function getJSON(link){
+    let temp = await fetch(link + "?cache=" + Date.now().toString(), {
+        method : "GET",
+        headers : {
+            cache: "no-store"
+        },
+    })
+    return new Map(Object.entries(temp))
+}
+
+chrome.runtime.onMessage.addListener((message, sender, callback) => {
     if(message.id == "tabs"){
-        data = message.data
-        uid = message.uid
+        let data = message.data
+        let op = []
         for (let [url, uid] of data){
-            patchJSON(urlLink, JSON.stringify( [{ "op":"add", "path":"/"+[url]+"/"+[uid], "value":0 },
-                                                ] ))
+            op.push({ "op":"add", "path":"/"+[url]+"/"+[uid], "value":0 })
         }
+        patchJSON(urlLink, JSON.stringify(op))
+    }
+    else if(message.id == "update"){
+        console.log("I GOT iT")
+        callback({data : "i call back"})
     }
 })

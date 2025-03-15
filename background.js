@@ -26,4 +26,15 @@ async function getTabs() {
 // {id : "tabs", data: }
 chrome.runtime.onInstalled.addListener(function() {
     console.log("擴展已安裝");
+    chrome.alarms.create("updateClock", {
+      periodInMinutes: 1 // Runs every 1 minute
+    });
+});
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === "updateClock") {
+    chrome.runtime.sendMessage( {id: "update", data: null}, (response) => {
+      console.log(response)
+    } )
+  }
 });
