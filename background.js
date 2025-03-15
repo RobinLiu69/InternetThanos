@@ -1,6 +1,5 @@
-const URLLINK = "https://json.extendsclass.com/bin/de7f66f4f5bc" //  https://extendsclass.com/jsonstorage/fe273cc038a4
-const IDLELINK = "https://json.extendsclass.com/bin/02121382ec93" // https://extendsclass.com/jsonstorage/688c7ed03e87
-const VSLINK = "https://json.extendsclass.com/bin/132c13bb4679"//    https://extendsclass.com/jsonstorage/ac25af8d762b
+const URLLINK = "https://json.extendsclass.com/bin/a5cec142d954" //  https://extendsclass.com/jsonstorage/a5cec142d954
+const VSLINK = "https://json.extendsclass.com/bin/0298e8ec6d08"//    https://extendsclass.com/jsonstorage/0298e8ec6d08
 
 let UID = '';
 let STARTCHECKINGMATCHES = 10
@@ -259,26 +258,6 @@ async function BannedWebsite(link) {
     
 }
 
-
-async function serverUpdateIdle(){
-	await serverPatchJSON(IDLELINK, JSON.stringify( { "op":"add", "path":"/"+[UID], "value":Date.now() } ))
-}
-
-async function serverClearIdle(){
-	let data = await serverGetJSON(IDLELINK)
-	let urlData = await serverGetJSON(URLLINK)
-	for (let [uid, tm] of data){
-		if(Date.now() - tm > 30*1000){
-			serverPatchJSON(IDLELINK, JSON.stringify( { "op":"remove", "path":"/"+[uid] } ))
-			for(let [url, uids] of urlData){
-				if(uid in uids){
-					serverPatchJSON(IDLELINK, JSON.stringify( { "op":"remove", "path":"/"+[url]+"/"+[uid] } ))
-				}
-			}
-		}
-	}
-}
-
 import { serverAddLinkData } from "./tools.js"
 
 function serverIsAdmin(){
@@ -338,10 +317,8 @@ async function serverUpdate() {
     }
 	if(seconds == 0){
         STARTCHECKINGMATCHES = 0
-		await serverUpdateIdle()
 		if(serverIsAdmin()){
             console.log("adminGOadminGOadminGOadminGOadminGOadminGOadminGOadminGO")
-			//await serverClearIdle()
 			serverCheckMatches()
 		}
 	}
@@ -376,7 +353,6 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
         if(serverIsAdmin()){
             console.log("adminGOadminGOadminGOadminGOadminGOadminGOadminGOadminGO")
 			await serverPatchJSON(VSLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
-			//await serverClearIdle()
 			serverCheckMatches()
 		}
         STARTCHECKINGMATCHES = 0
