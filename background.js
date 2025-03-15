@@ -3,7 +3,6 @@ const IDLELINK = "https://json.extendsclass.com/bin/d9a563320dff" //https://exte
 const VSLINK = "https://json.extendsclass.com/bin/e16604375e31"//https://extendsclass.com/jsonstorage/e16604375e31
 
 let UID = '';
-let ISADMIN = false
 
 chrome.runtime.onInstalled.addListener(() => {
     const uidKey = "userUID";
@@ -21,9 +20,9 @@ chrome.runtime.onInstalled.addListener(() => {
     });
 });
 async function sendTabstoServerJS() {
-    links = new Promise((resolve, reject) => {
+    let links = new Promise((resolve, reject) => {
         chrome.tabs.query({}, (tabs) => {
-            ret = []
+            let ret = []
             for (let i=0; i<tabs.length; i++) {
                 let url = tabs[i].url
                 if(url.substring(0, 8) == "https://"){
@@ -49,7 +48,7 @@ async function sendTabstoServerJS() {
 	links.then((message) => {
 		console.log("sent at : ", Date.now())
 		serverUploadTabs(message)
-    	chrome.runtime.sendMessage({links: message});
+    	//chrome.runtime.sendMessage({links: message});
 	})
 }
 
@@ -60,10 +59,6 @@ chrome.runtime.onInstalled.addListener(async () => {
     const uidKey = "userUID";
     
     // 檢查 localStorage 是否已有 UID
-    if(UID){
-		console.log("HAS")
-		return;
-	}
     chrome.storage.local.get([uidKey], (result) => {
         if (!result[uidKey]) {
             const newUID = crypto.randomUUID();  // 產生新的 UID
@@ -72,6 +67,7 @@ chrome.runtime.onInstalled.addListener(async () => {
                 console.log("新 UID 已生成：", newUID);
             });
         } else {
+			UID = result[uidKey]
             console.log("已存在 UID：", result[uidKey]);
         }
     });
@@ -79,6 +75,7 @@ chrome.runtime.onInstalled.addListener(async () => {
 
 // {id : "tabs", data: }
 chrome.runtime.onInstalled.addListener(function() {
+	//serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
 	//startServer();
     console.log("擴展已安裝");
 	sendTabstoServerJS()
@@ -110,36 +107,59 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 //--------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------
 
-async function serverPatchJSON(link, op){
-	console.log(link, op)
+async function serverPatchJSON(link, payload) {
     fetch(link, {
-        method : "PATCH",
-        headers : {
+        method: "PATCH",
+        mode: "cors",
+        headers: {
             "Content-type": "application/json-patch+json",
-            cache: "no-store"
         },
-        body : op
+        body: payload
     }).then(response => {
         console.log("response : ", response)
-	})
+		console.log("patching payload : ", link + " : " + payload)
+    }).catch(err => {console.log("error : ", err)})
 }
 
-async function serverGetJSON(link){
-    let temp = await fetch(link + "?cache=" + Date.now().toString(), {
-        method : "GET",
-        headers : {
-            cache: "no-store"
-        },
-    })
-    return new Map(Object.entries(temp))
+async function serverGetJSON(link) {
+    // Fetch the response
+    let response = await fetch(link + "?cache=" + Date.now().toString(), {
+        method: "GET",
+        headers: {}
+    });
+    
+    // Parse the response as JSON
+    let jsonData = await response.json();
+    
+    // Convert the JSON object to a Map
+    return new Map(Object.entries(jsonData));
 }
 
-function serverUploadTabs(links){
+
+async function serverUploadTabs(links){
+	let origJSON = await serverGetJSON(URLLINK)
 	console.log(links)
-	for (let url of links){
-		serverPatchJSON(URLLINK, JSON.stringify({ "op":"add", "path":"/"+[url]+"/"+[UID], "value":0 }))
-	}
-	serverPatchJSON(URLLINK, JSON.stringify(op))
+	console.log("UID : ", UID)
+	//for (let url of links){
+	//	console.log("adding : ", url)
+	//	serverPatchJSON(URLLINK, JSON.stringify({ "op":"add", "path":"/"+[url], "value":0 }))
+	//}
+	console.log("in upload tabs : ", JSON.stringify(origJSON))
+	for (let url of links) {
+        //console.log(url, "tf : ", origJSON.has(url))
+        if(!origJSON.has(url)) {
+			console.log("It dont got")
+            //patchJSON(urlLink, JSON.stringify( { "op": "add", "path": "/"+url, "value": {UID:0} } ))
+            console.log("addin url : ", url)
+            //serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "/"+[url], "value": {[UID] : 0}  } ))
+            //origJSON.set(url, new Map([[UID, 0]]))
+        }
+        else if(!(origJSON.get("url"))){
+			console.log("I DONT HAVE : ", origJSON.get("url"))
+            //console.log(origJSON.get(url))
+            //serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "/"+[url]+"/"+[UID], "value": 0 } ))
+        }
+    }
 }
 
 async function serverUpdateIdle(){
@@ -147,18 +167,34 @@ async function serverUpdateIdle(){
 }
 
 async function serverClearIdle(){
-	data = await serverGetJSON(URLLINK)
+	let data = await serverGetJSON(IDLELINK)
+	let urlData = await serverGetJSON(URLLINK)
 	for (let [uid, tm] of data){
+<<<<<<< HEAD
 		if(Date.now() - tm > 30*1000){}
+=======
+		if(Date.now() - tm > 30*1000){
+			serverPatchJSON(IDLELINK, JSON.stringify( { "op":"remove", "path":"/"+[uid] } ))
+			for(let [url, uids] of urlData){
+				if(uids.has(uid)){
+					serverPatchJSON(IDLELINK, JSON.stringify( { "op":"remove", "path":"/"+[url]+"/"+[uid] } ))
+				}
+			}
+		}
+>>>>>>> c2ba824456f999eca8551ea4ca2878cb7f87f395
 	}
 }
 
 // import { serverAddLinkData } from "./tools.js"
 
+function serverIsAdmin(){
+	return UID == "b0e03bdb-40b3-4950-8b12-170d80e90412"
+}
+
 async function serverCheckMatches(){
 	//games = ["math.html", "typing.html", "cowboy.html", "maze.html"]
-	games = ["math.html", "typing.html"]
-	tabs = await serverGetJSON(URLLINK)
+	let games = ["math.html", "typing.html"]
+	let tabs = await serverGetJSON(URLLINK)
 	for (let [url, uids] of tabs) {
 		let uid2 = false
 		for (let [uid1, empty] of uids){
@@ -167,7 +203,7 @@ async function serverCheckMatches(){
 			}
 			else{
 				let x = uid1+"-"+uid2
-				game = games[Math.floor(Math.random()*games.length)];
+				let game = games[Math.floor(Math.random()*games.length)];
 				game = game + serverAddLinkData(game)
 				serverPatchJSON(VSLINK, {x: {"game" : game, uid1 : "", uid2 : "", "win" : ""} })
 				uid2 = false
@@ -182,9 +218,13 @@ async function serverUpdate() {
 	timeClock += 1
 	chrome.runtime.sendMessage({id: "clock", message: timeClock });
     console.log(timeClock);
+<<<<<<< HEAD
 	if(timeClock % 60 == 0){
+=======
+	if(timeClock % 5 == 0){
+>>>>>>> c2ba824456f999eca8551ea4ca2878cb7f87f395
 		//await serverUpdateIdle()
-		if(ISADMIN){
+		if(serverIsAdmin()){
 			await serverClearIdle()
 			serverCheckMatches()
 		}
