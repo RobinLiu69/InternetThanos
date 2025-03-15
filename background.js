@@ -196,29 +196,22 @@ async function serverUploadTabs(links){
 	//	console.log("adding : ", url)
 	//	serverPatchJSON(URLLINK, JSON.stringify({ "op":"add", "path":"/"+[url], "value":0 }))
 	//}
-	for (let [a, b] of origJSON){
-	}
 	console.log("in tabs : ", origJSON)
-    for (let [a, b] of origJSON){
-       for (let [url, t] of links) {
-            //console.log(url, "tf : ", origJSON.has(url))
-            if(!origJSON.has(url)) {
-                console.log("It dont got")
-                //patchJSON(urlLink, JSON.stringify( { "op": "add", "path": "/"+url, "value": {UID:0} } ))
-                console.log("addin url : ", url)
-                serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "/"+[url], "value": {[UID] : 0}  } ))
-                //origJSON.set(url, new Map([[UID, 0]]))
-            }
-            else{
-                //console.log("I DONT HAVE : ", origJSON[0])
-                //console.log(origJSON.get(url))
-                serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "/"+[url]+"/"+[UID], "value": 0 } ))
-            }
+    for (let [url, t] of links) {
+        //console.log(url, "tf : ", origJSON.has(url))
+        if(!origJSON.has(url)) {
+            console.log("It dont got")
+            //patchJSON(urlLink, JSON.stringify( { "op": "add", "path": "/"+url, "value": {UID:0} } ))
+            console.log("addin url : ", url)
+            serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "/"+[url], "value": {[UID] : 0}  } ))
+            //origJSON.set(url, new Map([[UID, 0]]))
         }
-        a = 198470189
-        break
+        else{
+            //console.log("I DONT HAVE : ", origJSON[0])
+            //console.log(origJSON.get(url))
+            serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "/"+[url]+"/"+[UID], "value": 0 } ))
+        }
     }
-
 
 }
 
@@ -333,15 +326,16 @@ async function serverUpdate() {
     // console.log(seconds);
 	chrome.runtime.sendMessage({id: "clock", message: null });
     checkBanned();
-    if(seconds % 10 > 3){
+    if(seconds == 30){
         await serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
+    }
+    if(seconds % 10 > 3){
         await sendTabstoServerJS()
     }
 	if(seconds == 0){
         STARTCHECKINGMATCHES = 0
 		await serverUpdateIdle()
 		if(serverIsAdmin()){
-            
 			await serverPatchJSON(VSLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
 			await serverClearIdle()
 			serverCheckMatches()
@@ -376,7 +370,6 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
     }
     if(message.id == "danger"){
         console.log("\nOH NO IM IN DANGER\n")
-        await serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
         await sendTabstoServerJS()
         await serverPatchJSON(VSLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
         await serverClearIdle()
