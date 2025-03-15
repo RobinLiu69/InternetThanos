@@ -1,6 +1,6 @@
-const URLLINK = "https://json.extendsclass.com/bin/fe273cc038a4" // https://extendsclass.com/jsonstorage/fe273cc038a4
-const IDLELINK = "https://json.extendsclass.com/bin/688c7ed03e87" //https://extendsclass.com/jsonstorage/688c7ed03e87
-const VSLINK = "https://json.extendsclass.com/bin/ac25af8d762b"//https://extendsclass.com/jsonstorage/ac25af8d762b
+const URLLINK = "https://json.extendsclass.com/bin/fe273cc038a4" //  https://extendsclass.com/jsonstorage/fe273cc038a4
+const IDLELINK = "https://json.extendsclass.com/bin/688c7ed03e87" // https://extendsclass.com/jsonstorage/688c7ed03e87
+const VSLINK = "https://json.extendsclass.com/bin/ac25af8d762b"//    https://extendsclass.com/jsonstorage/ac25af8d762b
 
 
 
