@@ -29,7 +29,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
     }
     if(message.id == "updateGame"){
         counter += 1;
-        if(WINCHECK && Math.floor(counter) == counter){
+        if(WINCHECK && Math.floor(counter) == counter && counter < 30 && counter % 3 == 0){
             whoWon()
         }
         button.innerText = counter.toFixed(2);
