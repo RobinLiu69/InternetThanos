@@ -175,9 +175,6 @@ async function serverClearIdle(){
 	let data = await serverGetJSON(IDLELINK)
 	let urlData = await serverGetJSON(URLLINK)
 	for (let [uid, tm] of data){
-<<<<<<< HEAD
-		if(Date.now() - tm > 30*1000){}
-=======
 		if(Date.now() - tm > 30*1000){
 			serverPatchJSON(IDLELINK, JSON.stringify( { "op":"remove", "path":"/"+[uid] } ))
 			for(let [url, uids] of urlData){
@@ -186,7 +183,6 @@ async function serverClearIdle(){
 				}
 			}
 		}
->>>>>>> c2ba824456f999eca8551ea4ca2878cb7f87f395
 	}
 }
 
@@ -224,11 +220,7 @@ async function serverUpdate() {
 	timeClock += 1
 	chrome.runtime.sendMessage({id: "clock", message: timeClock });
     console.log(timeClock);
-<<<<<<< HEAD
 	if(timeClock % 60 == 0){
-=======
-	if(timeClock % 5 == 0){
->>>>>>> c2ba824456f999eca8551ea4ca2878cb7f87f395
 		//await serverUpdateIdle()
 		if(serverIsAdmin()){
 			await serverClearIdle()
