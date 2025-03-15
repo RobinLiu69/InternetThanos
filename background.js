@@ -39,8 +39,7 @@ async function sendTabstoServerJS() {
 
 // Generate UID
 
-// Error in event handler: TypeError: Cannot read properties of undefined (reading 'local') at chrome-extension://pdgaddablmahdeilbjeccbcjchnlmcoa/background.js:45:20
-chrome.runtime.onInstalled.addListener(async () => {
+function seeUID(){
     const uidKey = "userUID";
     
     // 檢查 localStorage 是否已有 UID
@@ -56,6 +55,11 @@ chrome.runtime.onInstalled.addListener(async () => {
             console.log("已存在 UID：", result[uidKey]);
         }
     });
+}
+
+// Error in event handler: TypeError: Cannot read properties of undefined (reading 'local') at chrome-extension://pdgaddablmahdeilbjeccbcjchnlmcoa/background.js:45:20
+chrome.runtime.onInstalled.addListener(async () => {
+    seeUID()
     console.log("擴展已安裝");
 	sendTabstoServerJS()
     chrome.alarms.create("updateClock", {
@@ -310,12 +314,14 @@ async function serverUpdate() {
         await serverPatchJSON(VSLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
     }
     if(seconds == 30){
+        
         await serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
     }
     if(seconds % 5 == 0 && seconds > 30 && seconds <= 50 ){
         await sendTabstoServerJS()
     }
 	if(seconds == 0){
+        seeUID()
         STARTCHECKINGMATCHES = 0
 		if(serverIsAdmin()){
             console.log("adminGOadminGOadminGOadminGOadminGOadminGOadminGOadminGO")

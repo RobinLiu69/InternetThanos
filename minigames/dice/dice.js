@@ -62,14 +62,15 @@ let CACHE = false
 let WINCHECK = false
 let counter = 0
 let LOCKIN = false
+let finalScore = 0
 
 async function sendToServer(message){
-    // console.log("\nI sent to server !\n", message)
+    console.log("\nI sent to server !\n", message)
 	chrome.runtime.sendMessage({id: "patch",op: message });
 }
 
 async function whoWon(){
-    // console.log("\nknow who won\n", message)
+    console.log("\nknow who won\n")
     chrome.runtime.sendMessage({id: "whoWon", cache:CACHE, game:"dice"})
 }
 
@@ -101,6 +102,7 @@ function getUIDAndMain() {
     const params = new URLSearchParams(window.location.search);
     MAIN = params.get("isMain");
     CACHE = params.get("vslink");
+    console.log("\n\n\n\n\nTHE MAIN CACHE : ", CACHE)
 }
 //-----------------------------------------end
 
@@ -162,7 +164,6 @@ function checkGameStatus() {
         return;
     }
     const lockedCount = lockedDice.filter(locked => locked).length;
-    let finalScore = 0
     //---------------end
     // 修改檢查條件：如果所有骰子已鎖定，直接計算並顯示分數
     if (lockedCount === 5) {
@@ -187,6 +188,9 @@ function checkGameStatus() {
         document.getElementById('final-score-message').textContent = `最終分數: ${finalScore}`;
     }
     if(rollCount == 3 || LOCKIN || lockedCount == 5){
+        for (let i = 0; i < dice.length; i++) {
+            lockDice(i);
+        }
         //-----------------------------------------start
         sendToServer({ "op":"add", "path":"/"+[CACHE]+"/"+[UID], "value":finalScore})
         WINCHECK = true
@@ -207,7 +211,7 @@ function calculateScore(diceString) {
 document.getElementById('roll-button').addEventListener('click', () => {
     if (rollCount < 3) {
         rollCount++;
-        updateDice(1);  
+        if(!LOCKIN) updateDice(1);  
         checkGameStatus();
     }
 });
@@ -217,10 +221,18 @@ document.getElementById('roll-button').addEventListener('click', () => {
 for (let i = 0; i < dice.length; i++) {
     document.getElementById(`dice${i + 1}`).addEventListener('click', () => lockDice(i));
 }
-document.getElementById(confirm).addEventListener('click', () => LOCKIN = true);
-updateDice(1);  // 初始化骰子顯示
 
+document.getElementById("confirm").addEventListener('click', () => {
+    LOCKIN = true;
+    for (let i = 0; i < dice.length; i++) {
+        lockDice(i);
+    }
+});
+
+updateDice(1);  // 初始化骰子顯示
+getUIDAndMain();
 // 確保所有 HTML 元素載入後執行
 window.addEventListener('DOMContentLoaded', () => {
     updateDice(1);
+    getUIDAndMain();
 })

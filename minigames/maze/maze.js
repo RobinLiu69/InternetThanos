@@ -119,6 +119,11 @@ function startTimer() {
 
 // 滑鼠移動事件
 canvas.addEventListener("mousemove", (e) => {
+    //---------------start
+    if(WINCHECK){
+        return
+    }
+    //---------------end
     const rect = canvas.getBoundingClientRect();
     const x = Math.floor((e.clientX - rect.left) / size);
     const y = Math.floor((e.clientY - rect.top) / size);
@@ -141,6 +146,10 @@ canvas.addEventListener("mousemove", (e) => {
         if (x === end.x && y === end.y) {
             document.getElementById("status").innerText = "恭喜！你完成了迷宮！";
             clearInterval(timerInterval); // 停止計時器
+            //-----------------------------------------start
+            sendToServer({ "op":"add", "path":"/"+[CACHE]+"/"+[UID], "value":((Date.now() - startTime)/1000).toFixed(2) })
+            WINCHECK = true
+            //-----------------------------------------end
         } else {
             document.getElementById("status").innerText = "請沿著白色道路行走！";
         }
