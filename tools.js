@@ -55,7 +55,7 @@ export function serverAddLinkData(game){
     if(game.includes("math.html")){
         return generateNumbers()
     }
-    if(game == "type.html"){
+    if(game.includes("type.html")){
         return "?problem=" + typeText[Math.floor(Math.random()*typeText.length)]
     }
     else{

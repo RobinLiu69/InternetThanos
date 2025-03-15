@@ -248,6 +248,8 @@ async function BannedWebsite(link) {
     } else{ 
         bannedWebsites = JSON.parse(bannedWebsites);
     }   
+    console.log("\n\n\n BANNING LINK : ", link, "\n\n\n")
+    link = "https://" + link
     link = new URL(link).origin;
     bannedWebsites[link] = time;
     console.log(bannedWebsites);
@@ -285,8 +287,8 @@ function serverIsAdmin(){
 
 async function serverCheckMatches(){
 	console.log("\n\n\n\n\nMATCH IS GOING \n\n\n\n\n")
-	//games = ["math.html", "typing.html", "cowboy.html", "maze.html"]
-	let games = ["/minigames/math/math.html"]
+	//games = ["/minigames/math/math.html", "/minigames/type/type.html", "cowboy.html", "maze.html"]
+	let games = ["/minigames/type/type.html"]
 	let tabs = await serverGetJSON(URLLINK)
     console.log("the tabs in serverCheckMatches : ", tabs)
 	for (let [url, uids] of tabs) {
@@ -363,8 +365,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
                 }
                 if(ret.loser == UID){
                     chrome.runtime.sendMessage({id: "lose"})
-                    console.log("AAAAAAAAAAAAA");
-                    BannedWebsite(vs.origUrl);
+                    BannedWebsite(data.origUrl);
                 }
                 break
             }

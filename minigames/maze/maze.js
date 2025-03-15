@@ -15,6 +15,55 @@ let path = new Set();
 let startTime = null;
 let timerInterval = null;
 
+//-----------------------------------------start
+let UID = false
+let MAIN = false
+let CACHE = false
+let WINCHECK = false
+
+async function sendToServer(message){
+    // console.log("\nI sent to server !\n", message)
+	chrome.runtime.sendMessage({id: "patch",op: message });
+}
+
+async function whoWon(){
+    // console.log("\nknow who won\n", message)
+    chrome.runtime.sendMessage({id: "whoWon", cache:CACHE, game:"maze"})
+}
+
+chrome.runtime.onMessage.addListener(async (message, sender, response) => {
+    if(message.id == "win"){
+        document.getElementById('message').innerText = `✅ 你比對方快！你花了 ${((Date.now() - startTime)/1000).toFixed(2)} 秒\nYOU WIN!!!`;
+    }
+    if(message.id == "lose"){
+        document.getElementById('message').innerText = `you too slow:(, 你將被鎖5分鐘`;
+    }
+    if(message.id == "updateGame"){
+        counter += 1;
+        if(WINCHECK && Math.floor(counter) == counter && counter < 30 && counter % 3 == 0){
+            whoWon()
+        }
+        if(counter >= 30 && !WINCHECK){
+            sendToServer({ "op":"add", "path":"/"+[CACHE]+"/"+[UID], "value":1000000 })
+            document.getElementById('message').innerText = `❌ 超時!`
+            WINCHECK = true
+        }
+    }
+    if(message.id == "uid"){
+        UID = message.uid
+        // console.log("\n\nI GOT THE id ; \n\n", UID)
+    }
+})
+
+function getUIDAndMain() {
+    const params = new URLSearchParams(window.location.search);
+    MAIN = params.get("isMain");
+    CACHE = params.get("vslink");
+}
+//-----------------------------------------end
+
+
+
 // 生成迷宮
 function generateMaze() {
     function shuffle(array) {
