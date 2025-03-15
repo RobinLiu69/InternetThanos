@@ -25,12 +25,24 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
     if(message.id == "lose"){
         document.getElementById('message').innerText = `you lose :(, 你將被鎖5分鐘`;
     }
+    if(message.id == "updateGame"){
+        counter += 0.05;
+        if(WINCHECK && Math.floor(counter) == counter){
+            whoWon()
+        }
+        button.innerText = counter.toFixed(2);
+        if(counter >= 30){
+            sendToServer({ "op":"add", "path":"/"+[CACHE]+[UID], "value":1000000 })
+            document.getElementById('message').innerText = `❌ 超時!）`
+            WINCHECK = true
+        }
+    }
 })
 
 function getUIDAndMain() {
     const params = new URLSearchParams(window.location.search);
     UID = params.get("uid");
-    MAIN = pparams.get("isMain");
+    MAIN = params.get("isMain");
     CACHE = params.get("vslink");
 }
 //-----------------------------------------end
@@ -44,7 +56,6 @@ function getProblemFromURL() {
 // ✅ 解析運算式並計算答案
 function calculateAnswer(expression) {
     // 去掉多餘的空格
-    expression = expression.replace(/\s+/g, '');
 
     // 使用正則表達式提取運算符與數字
     const match = expression.match(/(\d+)([(\+)\-\*\/])(\d+)/);
@@ -70,7 +81,7 @@ function calculateAnswer(expression) {
 // ✅ 初始化題目
 function loadQuestion() {
     getUIDAndMain()
-    const problem = getProblemFromURL();
+    const problem = getProblemFromURL().replace(" ", "+");
     if (!problem) {
         document.getElementById('question').innerText = "❌ 無法獲取題目";
         return;
@@ -90,14 +101,6 @@ function loadQuestion() {
     // 開始計時
     counter = 0;
     wrongAttempts = 0;
-    clearInterval(interval);
-    interval = setInterval(() => {
-        counter += 0.05;
-        if(WINCHECK && Math.floor(counter) == counter){
-            whoWon()
-        }
-        button.innerText = counter.toFixed(2);
-    }, 50);
 }
 
 // ✅ 檢查使用者答案
@@ -132,4 +135,4 @@ function checkAnswer() {
 // 初始化題目
 loadQuestion();
 
-document.getElementById("sendText").addEventListener("click", sendText);
+document.getElementById("mathButton").addEventListener("click", checkAnswer);
