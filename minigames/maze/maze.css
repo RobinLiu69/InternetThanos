@@ -1,0 +1,27 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+  }
+  
+  #maze-container {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    background-color: #fff;
+    border: 2px solid #000;
+    overflow: hidden;
+  }
+  
+  #player {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    border-radius: 50%;
+  }
+  

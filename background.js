@@ -1,10 +1,25 @@
-import { startServer } from "./server.js";
+// import { startServer } from "./server.js";
 
 const urlLink = "https://json.extendsclass.com/bin/1684885865a7" // https://extendsclass.com/jsonstorage/1684885865a7
 const syncLink = "https://json.extendsclass.com/bin/d9a563320dff" //https://extendsclass.com/jsonstorage/d9a563320dff
 const vsLink = "https://json.extendsclass.com/bin/e16604375e31"//https://extendsclass.com/jsonstorage/e16604375e31
 let UID = false
 
+chrome.runtime.onInstalled.addListener(() => {
+    const uidKey = "userUID";
+    
+    // 檢查 localStorage 是否已有 UID
+    chrome.storage.local.get([uidKey], (result) => {
+        if (!result[uidKey]) {
+            const newUID = crypto.randomUUID();  // 產生新的 UID
+            chrome.storage.local.set({ [uidKey]: newUID }, () => {
+            console.log("新 UID 已生成：", newUID);
+            });
+        } else {
+            console.log("已存在 UID：", result[uidKey]);
+        }
+    });
+});
 async function sendTabstoServerJS() {
     message = [];
     if (chrome.tabs) {

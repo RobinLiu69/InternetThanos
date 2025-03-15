@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "我的Chrome擴展",
+    "name": "網路薩諾斯",
     "version": "1.0",
     "description": "一個簡單的Chrome擴展範例",
     "action": {
@@ -9,6 +9,6 @@
     "background": {
       "service_worker": "background.js"
     },
-    "permissions": ["activeTab", "alarms", "audio", "background", "tabs"]
+    "permissions": ["activeTab", "alarms", "audio", "background", "tabs", "storage"]
   }
   
