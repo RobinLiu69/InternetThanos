@@ -326,6 +326,9 @@ async function serverUpdate() {
     // console.log(seconds);
 	chrome.runtime.sendMessage({id: "clock", message: null });
     checkBanned();
+    if(second == 50 && serverIsAdmin()){
+        await serverPatchJSON(VSLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
+    }
     if(seconds == 30){
         await serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
     }
@@ -337,7 +340,6 @@ async function serverUpdate() {
 		await serverUpdateIdle()
 		if(serverIsAdmin()){
             console.log("adminGOadminGOadminGOadminGOadminGOadminGOadminGOadminGO")
-			await serverPatchJSON(VSLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
 			//await serverClearIdle()
 			serverCheckMatches()
 		}
