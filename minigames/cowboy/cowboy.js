@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function whoWon(){
         console.log("\nknow who won\n")
-        chrome.runtime.sendMessage({id: "whoWon", cache:CACHE, game:"dice"})
+        chrome.runtime.sendMessage({id: "whoWon", cache:CACHE, game:"cowboy"})
     }
 
     chrome.runtime.onMessage.addListener(async (message, sender, response) => {
