@@ -181,7 +181,15 @@ async function serverGetJSON(link) {
         },
     })
     console.log("Got this from a cool place : ", link)
-    let iddwadwak = await responseJSON.json()
+    let iddwadwak
+    try{
+        iddwadwak = await responseJSON.json()
+    }
+    catch (error){
+        serverPatchJSON(URLLINK, JSON.stringify({"op": "add", "path": "", "value": {} }))
+        sendTabstoServerJS()
+        console.log("ERRROR : ", error)
+    }
     iddwadwak = new Map(Object.entries(iddwadwak))
 	for (let [a, b] of iddwadwak){
 	}
