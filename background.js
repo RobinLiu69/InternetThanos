@@ -3,7 +3,7 @@ const VSLINK = "https://json.extendsclass.com/bin/481268c7df46"//    https://ext
 
 let UID = '';
 let STARTCHECKINGMATCHES = 10
-let RANDOM = Math.random()*10%5
+let RANDOM = Math.floor(Math.random()*10)%5
 
 async function sendTabstoServerJS() {
     let links = new Promise((resolve, reject) => {
