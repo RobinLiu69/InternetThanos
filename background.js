@@ -275,9 +275,6 @@ async function serverCheckMatches(){
 	let tabs = await serverGetJSON(URLLINK)
     console.log("the tabs in serverCheckMatches : ", tabs)
 	for (let [url, uids] of tabs) {
-        if(!url.includes("youtube")){
-            continue
-        }
 		let uid2 = false
 		uids = new Map(Object.entries(uids))
         console.log("the UIDS in MATCH STARTING : ", uids)
