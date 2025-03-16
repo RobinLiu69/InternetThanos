@@ -275,7 +275,7 @@ async function BannedWebsite(link) {
 import { serverAddLinkData } from "./tools.js"
 
 function serverIsAdmin(){
-	return UID == "84ceddf0-4acc-45b7-996b-83e816148a55";
+	return UID == "4ffc7979-9e8f-4906-ad29-1c7b84625df7";
 }
 
 async function serverCheckMatches(){
