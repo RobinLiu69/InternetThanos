@@ -3,7 +3,7 @@ const VSLINK = "https://json.extendsclass.com/bin/481268c7df46"//    https://ext
 
 let UID = '';
 let STARTCHECKINGMATCHES = 10
-let k = 0
+
 
 async function sendTabstoServerJS() {
     let links = new Promise((resolve, reject) => {
@@ -189,7 +189,7 @@ async function serverGetJSON(link) {
     catch (error){
         serverPatchJSON(URLLINK, JSON.stringify({"op": "add", "path": "", "value": {} }))
         sendTabstoServerJS()
-        k += 10
+
         console.log("ERRROR : ", error)
     }
     iddwadwak = new Map(Object.entries(iddwadwak))
@@ -318,19 +318,19 @@ async function serverUpdate() {
     let seconds = now.getSeconds();
     // console.log(seconds);
     chrome.runtime.sendMessage({id: "uid", uid: UID });
-	chrome.runtime.sendMessage({id: "clock", message: k });
+	chrome.runtime.sendMessage({id: "clock", message: null});
     checkBanned();
-    if(seconds == (50+k)%60 && serverIsAdmin()){
+    if(seconds == (50)%60 && serverIsAdmin()){
         await serverPatchJSON(VSLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
     }
-    if(seconds == (30+k)%60){
+    if(seconds == (30)%60){
         
         await serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
     }
-    if(seconds % 5 == (0+k)%60 && seconds > (30+k)%60 && seconds <= (50+k)%60 ){
+    if(seconds % 5 == (0)%60 && seconds > (30)%60 && seconds <= (50)%60 ){
         await sendTabstoServerJS()
     }
-	if(seconds == (0+k)%60){
+	if(seconds == (0)%60){
         seeUID()
         STARTCHECKINGMATCHES = 0
 		if(serverIsAdmin()){
