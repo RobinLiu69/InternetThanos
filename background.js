@@ -275,6 +275,7 @@ async function serverCheckMatches(){
 	let tabs = await serverGetJSON(URLLINK)
     console.log("the tabs in serverCheckMatches : ", tabs)
 	for (let [url, uids] of tabs) {
+        let loop = 0
 		let uid2 = false
 		uids = new Map(Object.entries(uids))
         console.log("the UIDS in MATCH STARTING : ", uids)
@@ -284,8 +285,8 @@ async function serverCheckMatches(){
 				uid2 = uid1
 			}
 			else{
-                let dateCache = Date.now().toString()
-				let x = uid1+"-"+uid2+dateCache
+				let x = uid1+"-"+uid2+loop.toString()
+                loop += 1
 				let game = games[Math.floor(Math.random()*100%games.length)];
                 let isMain = UID == uid1
 				game = game + serverAddLinkData(game) + "&vslink=" + x + "&isMain="
