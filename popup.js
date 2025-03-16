@@ -84,8 +84,8 @@ chrome.runtime.onMessage.addListener((message, sender, callback) => {
         const now = new Date();
         const seconds = now.getSeconds();
         const milliseconds = now.getMilliseconds();
-        const progress = (60 - (seconds + milliseconds / 1000)) / 60 * 100;
-        const leftTime = 60-seconds;
+        const progress = (60+k - (seconds + milliseconds / 1000)) / (60+k) * 100;
+        const leftTime = 60-seconds+k;
         li.textContent = leftTime;
         const clock = document.getElementById('clock');
         clock.style.setProperty('--progress', `${progress}%`);
