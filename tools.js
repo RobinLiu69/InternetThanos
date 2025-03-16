@@ -58,6 +58,9 @@ export function serverAddLinkData(game){
     if(game.includes("type.html")){
         return "?problem=" + typeText[Math.floor(Math.random()*typeText.length)]
     }
+    if(game.includes("dice.html")){
+        return "?problem=NONE"
+    }
     else{
         return "?problem=NONE"
     }

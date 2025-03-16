@@ -26,7 +26,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
         document.getElementById('message').innerText = `✅ 正確答案！你花了 ${((Date.now() - startTime)/1000).toFixed(2)} 秒\nYOU WIN!!!`;
     }
     if(message.id == "lose"){
-        document.getElementById('message').innerText = `you lose :(, 你將被鎖5分鐘`;
+        document.getElementById('message').innerText = `you lose :(, 你的${message.url}將被鎖5分鐘`;
     }
     if(message.id == "updateGame"){
         counter += 1;

@@ -30,7 +30,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
         resultElement.innerText = `✅ 正確！你完成了這段文字。\n打字速度: ${wpm} 字/分鐘\nYOU WIN!!!`;
     }
     if(message.id == "lose"){
-        resultElement.innerText = `❌ \n打字速度: ${wpm} 字/分鐘\nyou lose, 你將被鎖5分鐘`;
+        resultElement.innerText = `❌ \n打字速度: ${wpm} 字/分鐘\nyou lose, 你的${message.url}將被鎖5分鐘`;
     }
     if(message.id == "updateGame"){
         setInterval(function () {checkTyping();if(starting) return}, 100);

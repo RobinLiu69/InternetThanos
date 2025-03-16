@@ -39,8 +39,7 @@ async function sendTabstoServerJS() {
 
 // Generate UID
 
-// Error in event handler: TypeError: Cannot read properties of undefined (reading 'local') at chrome-extension://pdgaddablmahdeilbjeccbcjchnlmcoa/background.js:45:20
-chrome.runtime.onInstalled.addListener(async () => {
+function seeUID(){
     const uidKey = "userUID";
     
     // 檢查 localStorage 是否已有 UID
@@ -56,6 +55,11 @@ chrome.runtime.onInstalled.addListener(async () => {
             console.log("已存在 UID：", result[uidKey]);
         }
     });
+}
+
+// Error in event handler: TypeError: Cannot read properties of undefined (reading 'local') at chrome-extension://pdgaddablmahdeilbjeccbcjchnlmcoa/background.js:45:20
+chrome.runtime.onInstalled.addListener(async () => {
+    seeUID()
     console.log("擴展已安裝");
 	sendTabstoServerJS()
     chrome.alarms.create("updateClock", {
@@ -261,12 +265,12 @@ async function BannedWebsite(link) {
 import { serverAddLinkData } from "./tools.js"
 
 function serverIsAdmin(){
-	return false;
+	return UID == "b0e03bdb-40b3-4950-8b12-170d80e90412";
 }
 
 async function serverCheckMatches(){
 	console.log("\n\n\n\n\nMATCH IS GOING \n\n\n\n\n")
-	//games = ["/minigames/math/math.html", "/minigames/type/type.html", "cowboy.html", "maze.html"]
+	//games = ["/minigames/math/math.html", "/minigames/type/type.html", "/minigames/dice/dice.html", "/minigames/maze/maze.html"]
 	let games = ["/minigames/maze/maze.html"]
 	let tabs = await serverGetJSON(URLLINK)
     console.log("the tabs in serverCheckMatches : ", tabs)
@@ -290,6 +294,7 @@ async function serverCheckMatches(){
 				game = game + serverAddLinkData(game) + "&vslink=" + x + "&isMain="
                 if(isMain) game = game+"true";
                 else game = game+"false";
+                console.log(game);
 				console.log("\n\n, there is a match!!! : ", uid1, uid2)
 				serverPatchJSON(VSLINK, JSON.stringify({"op": "add", "path": "/"+[x], "value": {"game" : game, [uid1] : "", [uid2] : "", "uids": [uid1, uid2], "origUrl":url} }))
 				uid2 = false
@@ -310,12 +315,14 @@ async function serverUpdate() {
         await serverPatchJSON(VSLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
     }
     if(seconds == 30){
+        
         await serverPatchJSON(URLLINK, JSON.stringify( { "op": "add", "path": "", "value": {}  } ))
     }
     if(seconds % 5 == 0 && seconds > 30 && seconds <= 50 ){
         await sendTabstoServerJS()
     }
 	if(seconds == 0){
+        seeUID()
         STARTCHECKINGMATCHES = 0
 		if(serverIsAdmin()){
             console.log("adminGOadminGOadminGOadminGOadminGOadminGOadminGOadminGO")
@@ -341,7 +348,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
                     chrome.runtime.sendMessage({id: "win" });
                 }
                 if(ret.loser == UID){
-                    chrome.runtime.sendMessage({id: "lose"})
+                    chrome.runtime.sendMessage({id: "lose", url : data.origUrl})
                     BannedWebsite(data.origUrl);
                 }
                 break
