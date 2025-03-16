@@ -139,6 +139,9 @@ function checkAnswer() {
 }
 
 // 初始化題目
-loadQuestion();
+document.addEventListener("DOMContentLoaded", () => {
+    loadQuestion();
 
-document.getElementById("mathButton").addEventListener("click", checkAnswer);
+})
+
+document.getElementById("mathButton").addEventListener("click", checkAnswer);d

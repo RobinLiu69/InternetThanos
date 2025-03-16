@@ -88,7 +88,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
         }
         if(counter >= 30 && !WINCHECK){
             sendToServer({ "op":"add", "path":"/"+[CACHE]+"/"+[UID], "value":-100 })
-            document.getElementById('message').innerText = `❌ 超時!`
+            document.getElementById('message').textContent = `❌ 超時!`
             WINCHECK = true
         }
     }

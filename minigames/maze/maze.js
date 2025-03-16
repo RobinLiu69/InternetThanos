@@ -163,6 +163,9 @@ canvas.addEventListener("mousemove", (e) => {
     }
 });
 
-getUIDAndMain()
-generateMaze();
-drawMaze();
+document.addEventListener("DOMContentLoaded", () => {
+    getUIDAndMain()
+    generateMaze();
+    drawMaze();
+})
+

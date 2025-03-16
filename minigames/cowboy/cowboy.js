@@ -17,6 +17,57 @@ document.addEventListener("DOMContentLoaded", () => {
     bulletElement.textContent = `剩餘子彈: ${shotsLeft}`;
     timeElement.textContent = `時間: 0`;
 
+
+    //-----------------------------------------start
+    let UID = false
+    let MAIN = false
+    let CACHE = false
+    let WINCHECK = false
+    let counter = 0
+    let finalScore = 0
+
+    async function sendToServer(message){
+        console.log("\nI sent to server !\n", message)
+        chrome.runtime.sendMessage({id: "patch",op: message });
+    }
+
+    async function whoWon(){
+        console.log("\nknow who won\n")
+        chrome.runtime.sendMessage({id: "whoWon", cache:CACHE, game:"dice"})
+    }
+
+    chrome.runtime.onMessage.addListener(async (message, sender, response) => {
+        if(message.id == "win"){
+            document.getElementById('basetext').textContent = `✅ 槍術很好\nYOU WIN!!!`;
+        }
+        if(message.id == "lose"){
+            document.getElementById('basetext').textContent = `你被射死了, 你的${message.url}將被鎖5分鐘`;
+        }
+        if(message.id == "updateGame"){
+            counter += 1;
+            if(WINCHECK && Math.floor(counter) == counter && counter < 30 && counter % 3 == 0){
+                whoWon()
+            }
+            if(counter >= 20 && !WINCHECK){
+                sendToServer({ "op":"add", "path":"/"+[CACHE]+"/"+[UID], "value":-100 })
+                document.getElementById('basetext').textContent = `❌ 超時!`
+                WINCHECK = true
+            }
+        }
+        if(message.id == "uid"){
+            UID = message.uid
+            // console.log("\n\nI GOT THE id ; \n\n", UID)
+        }
+    })
+
+    function getUIDAndMain() {
+        const params = new URLSearchParams(window.location.search);
+        MAIN = params.get("isMain");
+        CACHE = params.get("vslink");
+        console.log("\n\n\n\n\nTHE MAIN CACHE : ", CACHE)
+    }
+    //-----------------------------------------end
+
     // 倒數計時
     const countdownInterval = setInterval(() => {
         countdown--;
@@ -28,6 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 1000);
 
     function startGame() {
+        getUIDAndMain()
         countdownElement.style.display = "none";
         gameContainer.style.display = "block";
         targetButton.style.display = "block";
@@ -107,6 +159,12 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("你已經射擊3次，無法再開槍！");
             return;
         }
+
+        //---------------start
+        if(WINCHECK){
+            return;
+        }
+        //---------------end
     
         shotsLeft--;
         shoot()
@@ -143,9 +201,12 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             backgroundImage.style.backgroundImage = "url('cowboy3.png')";
             finalTime = timeElement.textContent
+            //-----------------------------------------start
+            sendToServer({ "op":"add", "path":"/"+[CACHE]+"/"+[UID], "value":finalTime})
+            WINCHECK = true
+            //-----------------------------------------end
             console.log(finalTime)
         }
-    
         if (shotsLeft === 0) {
             targetButton.disabled = true; // 禁用按鈕
         }

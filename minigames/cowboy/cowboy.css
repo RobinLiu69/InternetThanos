@@ -153,3 +153,19 @@ body {
     z-index: 100; /* 確保最高層 */
     pointer-events: none;
 }
+
+#basetext {
+    font-size: 48px;
+    font-weight: bold;
+    background: rgba(139, 69, 19, 0.8);
+    padding: 20px 80px;
+    border: 2px solid #8b4513;
+    border-radius: 15px;
+    position: absolute;
+    top: 75vh;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+}
