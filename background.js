@@ -1,4 +1,4 @@
-const URLLINK = "https://json.extendsclass.com/bin/a5cec142d954" //  https://extendsclass.com/jsonstorage/a5cec142d954
+const URLLINK = "https://json.extendsclass.com/bin/ea1619b73a8f" //  https://extendsclass.com/jsonstorage/a5cec142d954
 const VSLINK = "https://json.extendsclass.com/bin/ec914419415c"//    https://extendsclass.com/jsonstorage/ec914419415c
 
 let UID = '';
@@ -289,7 +289,7 @@ async function serverCheckMatches(){
 			else{
                 let dateCache = Date.now().toString()
 				let x = uid1+"-"+uid2+dateCache
-				let game = games[Math.floor(Math.random()*games.length)];
+				let game = games[Math.floor(Math.random()*100%games.length)];
                 let isMain = UID == uid1
 				game = game + serverAddLinkData(game) + "&vslink=" + x + "&isMain="
                 if(isMain) game = game+"true";
