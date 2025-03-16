@@ -183,7 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const hitboxY = window.innerHeight * 0.2; // 命中範圍 20% 視窗高度
     
         // 增加 50% 機率強制 Miss（測試時用，可以改回 1%）
-        const isMiss = Math.random() < 0.1 || Math.abs(crossCenterX - centerX) > hitboxX || Math.abs(crossCenterY - centerY) > hitboxY;
+        const isMiss = Math.random() < 0.3 || Math.abs(crossCenterX - centerX) > hitboxX || Math.abs(crossCenterY - centerY) > hitboxY;
     
         if (isMiss) {
             // 让 MISS 文字出现在 cross 位置

@@ -75,7 +75,7 @@ body {
     height: 3000px;
     background-color: rgba(255, 255, 255, 0);
     border: none;
-    cursor: crosshair;
+    cursor: none;
     z-index: 30;
 }
 
