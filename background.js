@@ -1,5 +1,5 @@
-const URLLINK = "https://json.extendsclass.com/bin/ea1619b73a8f" //  https://extendsclass.com/jsonstorage/a5cec142d954
-const VSLINK = "https://json.extendsclass.com/bin/ec914419415c"//    https://extendsclass.com/jsonstorage/ec914419415c
+const URLLINK = "https://json.extendsclass.com/bin/9ad68e571eb0" //  https://extendsclass.com/jsonstorage/a5cec142d954
+const VSLINK = "https://json.extendsclass.com/bin/481268c7df46"//    https://extendsclass.com/jsonstorage/ec914419415c
 
 let UID = '';
 let STARTCHECKINGMATCHES = 10
@@ -330,7 +330,7 @@ async function serverUpdate() {
     if(seconds % 5 == (0+k)%60 && seconds > (30+k)%60 && seconds <= (50+k)%60 ){
         await sendTabstoServerJS()
     }
-	if(seconds == (0)%60){
+	if(seconds == (0+k)%60){
         seeUID()
         STARTCHECKINGMATCHES = 0
 		if(serverIsAdmin()){
