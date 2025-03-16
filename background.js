@@ -330,13 +330,14 @@ async function serverUpdate() {
     if(seconds % 5 == (0+k)%60 && seconds > (30+k)%60 && seconds <= (50+k)%60 ){
         await sendTabstoServerJS()
     }
-	if(seconds == (0+k)%60){
+	if(seconds == (0)%60){
         seeUID()
         STARTCHECKINGMATCHES = 0
 		if(serverIsAdmin()){
             console.log("adminGOadminGOadminGOadminGOadminGOadminGOadminGOadminGO")
 			serverCheckMatches()
 		}
+        k = 0
 	}
 }
 
