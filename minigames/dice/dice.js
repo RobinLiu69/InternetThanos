@@ -79,7 +79,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
         document.getElementById('message').textContent = `✅ 真幸運！你拿了 ${finalScore} 分\nYOU WIN!!!`;
     }
     if(message.id == "lose"){
-        document.getElementById('message').textContent = `you don't have good luck:(, 你將被鎖5分鐘`;
+        document.getElementById('message').textContent = `you don't have good luck:(, 你的${message.url}將被鎖5分鐘`;
     }
     if(message.id == "updateGame"){
         counter += 1;

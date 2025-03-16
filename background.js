@@ -270,8 +270,8 @@ function serverIsAdmin(){
 
 async function serverCheckMatches(){
 	console.log("\n\n\n\n\nMATCH IS GOING \n\n\n\n\n")
-	//games = ["/minigames/math/math.html", "/minigames/type/type.html", "/minigames/dice/dice.html", "maze.html"]
-	let games = ["/minigames/dice/dice.html"]
+	//games = ["/minigames/math/math.html", "/minigames/type/type.html", "/minigames/dice/dice.html", "/minigames/maze/maze.html"]
+	let games = ["/minigames/maze/maze.html"]
 	let tabs = await serverGetJSON(URLLINK)
     console.log("the tabs in serverCheckMatches : ", tabs)
 	for (let [url, uids] of tabs) {
@@ -294,6 +294,7 @@ async function serverCheckMatches(){
 				game = game + serverAddLinkData(game) + "&vslink=" + x + "&isMain="
                 if(isMain) game = game+"true";
                 else game = game+"false";
+                console.log(game);
 				console.log("\n\n, there is a match!!! : ", uid1, uid2)
 				serverPatchJSON(VSLINK, JSON.stringify({"op": "add", "path": "/"+[x], "value": {"game" : game, [uid1] : "", [uid2] : "", "uids": [uid1, uid2], "origUrl":url} }))
 				uid2 = false
@@ -347,7 +348,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
                     chrome.runtime.sendMessage({id: "win" });
                 }
                 if(ret.loser == UID){
-                    chrome.runtime.sendMessage({id: "lose"})
+                    chrome.runtime.sendMessage({id: "lose", url : data.origUrl})
                     BannedWebsite(data.origUrl);
                 }
                 break

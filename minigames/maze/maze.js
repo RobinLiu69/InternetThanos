@@ -14,12 +14,14 @@ let path = new Set();
 
 let startTime = null;
 let timerInterval = null;
+let ENDTIME = false
 
 //-----------------------------------------start
 let UID = false
 let MAIN = false
 let CACHE = false
 let WINCHECK = false
+let counter = 0
 
 async function sendToServer(message){
     // console.log("\nI sent to server !\n", message)
@@ -33,19 +35,21 @@ async function whoWon(){
 
 chrome.runtime.onMessage.addListener(async (message, sender, response) => {
     if(message.id == "win"){
-        document.getElementById('message').innerText = `✅ 你比對方快！你花了 ${((Date.now() - startTime)/1000).toFixed(2)} 秒\nYOU WIN!!!`;
+        document.getElementById("status").innerText = `✅ 你比對方快！你花了 ${ENDTIME} 秒\nYOU WIN!!!`;
     }
     if(message.id == "lose"){
-        document.getElementById('message').innerText = `you too slow:(, 你將被鎖5分鐘`;
+        document.getElementById("status").innerText = `you too slow:(, 你的${message.url}將被鎖5分鐘`;
     }
     if(message.id == "updateGame"){
         counter += 1;
+        setInterval(function () {updateTimer();if(WINCHECK) return}, 100);
+        
         if(WINCHECK && Math.floor(counter) == counter && counter < 30 && counter % 3 == 0){
             whoWon()
         }
         if(counter >= 30 && !WINCHECK){
             sendToServer({ "op":"add", "path":"/"+[CACHE]+"/"+[UID], "value":1000000 })
-            document.getElementById('message').innerText = `❌ 超時!`
+            document.getElementById("status").innerText = `❌ 超時!`
             WINCHECK = true
         }
     }
@@ -103,8 +107,8 @@ function drawMaze() {
 
 // 更新計時器
 function updateTimer() {
-    if (startTime) {
-        const elapsed = (Date.now() - startTime) / 1000;
+    if (startTime && !WINCHECK) {
+        const elapsed = ((Date.now() - startTime)/1000).toFixed(2);
         document.getElementById("timer").innerText = `時間：${elapsed} 秒`;
     }
 }
@@ -113,12 +117,12 @@ function updateTimer() {
 function startTimer() {
     if (!startTime) {
         startTime = Date.now();
-        timerInterval = setInterval(updateTimer, 1);
     }
 }
 
 // 滑鼠移動事件
 canvas.addEventListener("mousemove", (e) => {
+    getUIDAndMain()
     //---------------start
     if(WINCHECK){
         return
@@ -149,6 +153,7 @@ canvas.addEventListener("mousemove", (e) => {
             //-----------------------------------------start
             sendToServer({ "op":"add", "path":"/"+[CACHE]+"/"+[UID], "value":((Date.now() - startTime)/1000).toFixed(2) })
             WINCHECK = true
+            if(!ENDTIME) ENDTIME = ((Date.now() - startTime)/1000).toFixed(2)
             //-----------------------------------------end
         } else {
             document.getElementById("status").innerText = "請沿著白色道路行走！";
@@ -158,5 +163,6 @@ canvas.addEventListener("mousemove", (e) => {
     }
 });
 
+getUIDAndMain()
 generateMaze();
 drawMaze();
