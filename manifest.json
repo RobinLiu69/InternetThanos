@@ -10,6 +10,6 @@
       "service_worker": "background.js",
       "type": "module"
     },
-    "permissions": ["activeTab", "alarms", "background", "tabs", "storage"]
+    "permissions": ["activeTab", "alarms", "background", "tabs", "storage", "scripting"]
   }
   
